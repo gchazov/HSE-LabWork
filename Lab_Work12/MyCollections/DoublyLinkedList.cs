@@ -20,8 +20,6 @@ namespace MyCollections
         private DuplexItem<T>? Head { get; set; } //начальный элемент (головной)
         private DuplexItem<T>? Tail { get; set; } //крайний элемент (хвостовой)
 
-        
-        private int Size { get; set; } //кол-во элементов в коллекции
         public bool isEmpty //проверка на пустоту списка
         {
             get
@@ -30,10 +28,7 @@ namespace MyCollections
             }
         }
 
-        public int Count //размер коллекции (инкапсулировано)
-        {
-            get { return Size; }
-        }
+        public int Count { get; private set; } //размер коллекции (инкапсулировано)
 
         //индексатор
         public T this[int index]
@@ -57,7 +52,7 @@ namespace MyCollections
         public DoublyLinkedList()
         {
             Head = Current = Tail = null;
-            Size = 0;
+            Count = 0;
         } //пустая коллекция
 
         //конструктор с параметром (на основе элемента)
@@ -66,7 +61,7 @@ namespace MyCollections
             var item = new DuplexItem<T>(data);
             Head = item;
             Tail = item;
-            Size = 1;
+            Count = 1;
         }
 
         //добавление в самое начало
@@ -86,7 +81,7 @@ namespace MyCollections
                 Head = item;
                 item.Next.Prev = Head;
             }
-            Size++;
+            Count++;
         }
 
         //добавление в самый конец
@@ -105,7 +100,7 @@ namespace MyCollections
                 item.Prev = Tail;
                 Tail = item;
             }
-            Size++;
+            Count++;
         }
 
         //добавление элемента в коллекцию
@@ -141,7 +136,7 @@ namespace MyCollections
                 Current.Prev = newNode;
                 //правый указатель нашего объекта на текущий
                 newNode.Next = Current;
-                Size++;
+                Count++;
             }
         }
 
@@ -162,7 +157,7 @@ namespace MyCollections
                         Head.Next.Prev = null;
                     }
                     Head = Head.Next;
-                    Size--;
+                    Count--;
                 }
             }
         }
@@ -176,7 +171,7 @@ namespace MyCollections
                 DuplexItem<T> temporary = Tail; //временный узел
                 if (Tail.Prev != null) Tail.Prev.Next = null;
                 Tail = Tail.Prev;
-                Size--;
+                Count--;
                 return temporary;
             }
         }
