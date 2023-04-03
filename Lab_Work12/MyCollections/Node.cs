@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace MyCollections
 {
     //определение узла бинарного дерева
-    public class Node<T>
+    public class Node<T> : IComparable
         where T : IComparable //для правильной реализации
     {
         public T? Data { get; set; } //информационное поле
@@ -27,6 +27,7 @@ namespace MyCollections
             Right = right;
         }
 
+        //ОПИСАНИЕ добавления элемента в дерево
         public bool Add(T data)
         {
             if (data == null)
@@ -67,9 +68,17 @@ namespace MyCollections
             return true;
         }
 
+        //для вывода на экран
         public override string ToString()
         {
             return Data.ToString();
+        }
+
+        //компаратор для узла
+        public int CompareTo(object? obj)
+        {
+            if (obj is Node<T> item) return Data.CompareTo(item);
+            else throw new ArgumentException();
         }
     }
 }
