@@ -14,7 +14,7 @@ namespace ConsoleTools
     public class Dialog
     {
         //ввод числа
-        public static int EnterNumber(string welcomeString, int left, int right)
+        public static int EnterNumber(string welcomeString, int Left, int Right)
         {
             int number = 0;
             bool isParsed = false;
@@ -24,7 +24,7 @@ namespace ConsoleTools
                 try
                 {
                     number = int.Parse(Console.ReadLine());
-                    if (number >= left && number <= right)
+                    if (number >= Left && number <= Right)
                     {
                         isParsed = true;
                     }
