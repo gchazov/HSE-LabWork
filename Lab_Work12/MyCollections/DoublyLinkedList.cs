@@ -15,6 +15,7 @@ namespace MyCollections
 {
     //коллекция обобщённая, т.е. её можно использовать с разными типами данных
     public class DoublyLinkedList<T> : IEnumerable<T>
+        where T  : ICloneable
     {
         private DuplexItem<T>? Current { get; set; } //текущий эл.
         private DuplexItem<T>? Head { get; set; } //начальный элемент (головной)
@@ -39,11 +40,33 @@ namespace MyCollections
                 DuplexItem<T> current = Head;
                 for (int i = 0; i < index; i++)
                 {
-                    if (current.Next == null) //если выходим за гранрицы колллекции
+                    if (current.Next == null) //если выходим за границы колллекции
                         throw new ArgumentOutOfRangeException();
                     current = current.Next; //переход на следующий элемент
                 }
                 return current.Data;
+            }
+
+            set
+            {   
+                if (index >= 0 && index < Count)
+                {
+                    Current = Head;
+                    for (int i = 0; i < Count; i++)
+                    {
+                        if (i == index)
+                        {
+                            Current.Data = value;
+                            return;
+                        }
+                        Current = Current.Next; //переход на следующий элемент
+                    }
+                }
+                else
+                {
+                    //выбрасываем исключение
+                    throw new IndexOutOfRangeException();
+                }
             }
         }
 
@@ -195,6 +218,18 @@ namespace MyCollections
                 beg = beg.Prev;
             }
 
+        }
+
+
+        //клонирование двунаправленного списка
+        public DoublyLinkedList<T> Clone()
+        {
+            DoublyLinkedList <T> clone = new();
+            foreach (T item in this)
+            {
+                clone.AddLast((T)item.Clone());
+            }
+            return clone;
         }
         //нумератор для работы с циклом foreach
         public IEnumerator GetEnumerator()

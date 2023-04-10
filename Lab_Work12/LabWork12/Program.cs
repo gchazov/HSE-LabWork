@@ -2,6 +2,7 @@
 using ConsoleTools;
 using MyCollections;
 using Functionality;
+using System.Net.Http.Headers;
 
 namespace LabWork12
 {
@@ -21,7 +22,7 @@ namespace LabWork12
         static int MainMenu(ref DoublyLinkedList<Animal> dList)
             {
                 string[] options = { "Двунаправленный список","Бинарное дерево", 
-                    "Хеш-таблица", "Дерево поиска", "Завершить работу"};
+                    "Хеш-таблица", "MyCollection", "Завершить работу"};
                 Menu mainMenu = new(@"
         __          __       _       __           __      ______ 
        / /   ____ _/ /_     | |     / /___  _____/ /__   <  /__ \
@@ -85,10 +86,13 @@ namespace LabWork12
                                 case 3: //ПЕРЕВЕРНУТЬ СПИСОК
                                     DListReverse(ref dList);
                                     break;
-                                case 4: //ОЧИСТИТЬ СПИСОК
+                                case 4: //КЛОНИРОВАТЬ СПИСОК
+                                    DListClone(ref dList);
+                                    break;
+                                case 5: //ОЧИСТИТЬ СПИСОК
                                     DListClear(ref dList);
                                     break;
-                                case 5: //В ГЛАВНОЕ МЕНЮ
+                                case 6: //В ГЛАВНОЕ МЕНЮ
                                     dListRun = false;//выход в главное меню
                                     break;
                             }
@@ -118,7 +122,7 @@ namespace LabWork12
         static int DListMenu(ref DoublyLinkedList<Animal> dList)
         {
             string[] options = { "Создать список","Распечатать список",
-                "Добавить элемент по номеру", "Перевернуть список", "Очистить список", "В главное меню"};
+                "Добавить элемент по номеру", "Перевернуть список", "Клонировать список" ,"Очистить список", "В главное меню"};
             Menu dListMenuenu = new("Двунаправленный список", options);
 
             return dListMenuenu.Run();
@@ -246,9 +250,64 @@ namespace LabWork12
             }
         }
 
+        static void DListClone(ref DoublyLinkedList<Animal> dList)
+        {
+            Dialog.PrintHeader("Клонирование списка");
+            if (dList.isEmpty)
+            {
+                Dialog.ColorText("Коллекция пустая! Клонировать особо нечего...", "yellow");
+                Dialog.BackMessage();
+            }
+            else
+            {
+                DoublyLinkedList<Animal> clone = dList.Clone();
+
+                Console.WriteLine("Происходит клонирование списка...");
+                Console.WriteLine($"33%");
+                Thread.Sleep(1000);
+                Console.WriteLine($"75%");
+                Thread.Sleep(1000);
+                Console.WriteLine($"100%");
+                Thread.Sleep(1000);
+                Dialog.ColorText("\nСписок успешно склонирован!", "green");
+                Dialog.ColorText("\nИсходный список имеет вид:", "yellow");
+                foreach (Animal animal in dList)
+                {
+                    animal.Show();
+                }
+
+                Dialog.ColorText("\nСписок-клон выглядит так:", "red");
+                foreach (Animal animal in clone)
+                {
+                    animal.Show();
+                }
+
+                Console.WriteLine();
+                int indexToNull = Dialog.EnterNumber("Введите позицию исходного списка, элемент которой будет изменён", 1, dList.Count);
+
+                Console.WriteLine("Теперь инициализируйте сам элемент");
+                dList[indexToNull - 1] = new Animal().Init();
+
+
+                Dialog.ColorText("\nСейчас же исходный список имеет вид:", "yellow");
+                foreach (Animal animal in dList)
+                {
+                    animal.Show();
+                }
+
+                Dialog.ColorText("\nА список-клон остался прежним!", "red");
+                foreach (Animal animal in clone)
+                {
+                    animal.Show();
+                }
+                Dialog.ColorText("Вот так вот!", "green");
+                Dialog.BackMessage();
+            }
+        }
+
         static void DListClear(ref DoublyLinkedList<Animal> dList)
         {
-            Dialog.PrintHeader("Переворот списка");
+            Dialog.PrintHeader("Очистка списка");
             if (dList.isEmpty)
             {
                 Console.WriteLine("Коллекция как была пустой, так ей и осталась");
