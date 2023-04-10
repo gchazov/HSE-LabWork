@@ -12,9 +12,10 @@ namespace LabWork12
         {
             //инициализация коллекций по умолчанию
             DoublyLinkedList<Animal> dList = new();
+            BinaryTree<Animal> tree = new();
 
             //запуск выполнения всех методов подряд
-            Run(ref dList);
+            Run(ref dList, ref tree);
         }
 
 
@@ -41,7 +42,8 @@ namespace LabWork12
                 return mainMenu.Run();
             }
 
-        static void Run(ref DoublyLinkedList<Animal> dList)
+        static void Run(ref DoublyLinkedList<Animal> dList,
+            ref BinaryTree<Animal> tree)
         {
             do
             {
@@ -99,6 +101,25 @@ namespace LabWork12
                         } while (dListRun); //конструкция встречаться будет часто
                         break;
                     case 1: //БИНАРНОЕ ДЕРЕВО
+                        var bTreeRun = true;
+                        do
+                        {
+                            switch (TreeMenu(ref tree))
+                            {
+                                case 0: //СОЗДАТЬ ДЕРЕВО
+                                    break;
+                                case 1: //РАСПЕЧАТАТЬ ДЕРЕВО
+                                    break;
+                                case 2: //НАЙТИ МИНИМАЛЬНЫЙ ЭЛЕМЕНТ ДЕРЕВА
+                                    break;
+                                case 3: //ПРЕОБРАЗОВАТЬ В ДЕРЕВО ПОИСКА
+                                    break;
+                                case 4: //В ГЛАВНОЕ МЕНЮ
+                                    bTreeRun = false;
+                                    break;
+
+                            }
+                        } while (bTreeRun);
                         break;
                     case 2: //ХЕШ-ТАБЛИЦА
                         break;
@@ -113,12 +134,18 @@ namespace LabWork12
 \____/\____/\____/\__,_/  /_.___/\__, /\___(_)   
                                 /____/           
 ");
+
+                        BinaryTree<Animal> tr = new();
+                        BinaryTree<Animal>.IdealTreeRnd(5, tr);
+                        
+                        
                         Environment.Exit(0);
                         break;
                 }
             }while (true); //условие выхода есть, переживать не за что
         }
 
+        #region DoublyLinkedList
         static int DListMenu(ref DoublyLinkedList<Animal> dList)
         {
             string[] options = { "Создать список","Распечатать список",
@@ -320,6 +347,17 @@ namespace LabWork12
                 Dialog.ColorText("Список был успешно очищен! Теперь его длина равна нулю", "green");
                 Dialog.BackMessage();
             }
+        }
+
+        #endregion
+
+        static int TreeMenu(ref BinaryTree<Animal> tree)
+        {
+            string[] options = { "Создать идеально сбалансированное дерево","Распечатать дерево",
+                "Найти минимальный элемент дерева", "Преобразовать в дерево поиска", "В главное меню"};
+            Menu TreeMenuenu = new("Бинарное дерево", options);
+
+            return TreeMenuenu.Run();
         }
     }
 }

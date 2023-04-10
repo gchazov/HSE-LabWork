@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AnimalLibrary;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,8 @@ namespace MyCollections
         where T : IComparable //для правильной реализации
     {
         public T? Data { get; set; } //информационное поле
-        public Node<T>? Left { get; private set; } //левый потомок
-        public Node<T>? Right { get; private set; } //правый потомок
+        public Node<T>? Left { get; set; } //левый потомок
+        public Node<T>? Right { get; set; } //правый потомок
 
         public Node(T data) //конструктор с параметром
         {
@@ -20,11 +21,11 @@ namespace MyCollections
         }
 
         //конструктор с параметрами
-        public Node(T data, Node<T> left, Node<T> right)
+        public Node(T data, Node<T> Left, Node<T> Right)
         {
             Data = data;
-            Left = left;
-            Right = right;
+            Left = Left;
+            Right = Right;
         }
 
         //ОПИСАНИЕ добавления элемента в дерево
@@ -80,5 +81,7 @@ namespace MyCollections
             if (obj is Node<T> item) return Data.CompareTo(item);
             else throw new ArgumentException();
         }
+
+        
     }
 }
