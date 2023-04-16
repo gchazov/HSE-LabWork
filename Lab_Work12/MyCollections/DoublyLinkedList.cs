@@ -15,7 +15,7 @@ namespace MyCollections
 {
     //коллекция обобщённая, т.е. её можно использовать с разными типами данных
     public class DoublyLinkedList<T> : IEnumerable<T>
-        where T  : ICloneable
+        where T  : class, ICloneable, new()
     {
         private DuplexItem<T>? Current { get; set; } //текущий эл.
         private DuplexItem<T>? Head { get; set; } //начальный элемент (головной)
@@ -29,7 +29,7 @@ namespace MyCollections
             }
         }
 
-        public int Count { get; private set; } //размер коллекции (инкапсулировано)
+        public int Count { get; private set; } //размер коллекции (огр. доступ)
 
         //индексатор
         public T this[int index]
@@ -129,7 +129,7 @@ namespace MyCollections
         //добавление элемента в коллекцию
         public void Insert(T data, int index)
         {
-            if (index < 1 || index > Count) //вброс ошибки, если неправильный индекс
+            if (index < 1 || index > Count + 1) //вброс ошибки, если неправильный индекс
             {
                 throw new InvalidOperationException();
             }
@@ -137,7 +137,7 @@ namespace MyCollections
             {
                 AddFirst(data);
             }
-            else if (index == Count) //если конец
+            else if (index == Count + 1) //если вконец
             {
                 AddLast(data);
             }
@@ -231,6 +231,27 @@ namespace MyCollections
             }
             return clone;
         }
+
+        //вывод на экран
+        public void Show()
+        {
+            foreach (T item in this)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        //вывод на экран
+        public override string ToString()
+        {
+            string result = "";
+            foreach (T item in this)
+            {
+                result += item.ToString() + "\n";
+            }
+            return result;
+        }
+
         //нумератор для работы с циклом foreach
         public IEnumerator GetEnumerator()
         {
@@ -245,7 +266,7 @@ namespace MyCollections
             }
         }
 
-        //получение обобщённого нумератор
+        //получение обобщённого нумератора
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
            return (IEnumerator<T>)GetEnumerator();

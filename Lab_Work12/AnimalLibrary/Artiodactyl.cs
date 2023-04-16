@@ -87,6 +87,12 @@ namespace AnimalLibrary
                 $"Ареал обитания: {Habitat}; Покрыто шерстью: {isWoolen}; Вид рогов: {HornStyle}; ID в зоопарке: {id}");
         }
 
+        public override string ToString()
+        {
+            return $"Парнокопытное: {Name}; Возраст: {Age}; " +
+               $"Ареал обитания: {Habitat}; Покрыто шерстью: {isWoolen}; Вид рогов: {HornStyle}; ID в зоопарке: {id}";
+        }
+
         //метод поверхностного копирования
         public override object ShallowCopy()
         {

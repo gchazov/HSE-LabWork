@@ -79,6 +79,11 @@ namespace AnimalLibrary
             Console.WriteLine($"Млекопитающее: {Name}; Возраст: {Age}; Ареал обитания: {Habitat}; Покрыто шерстью: {isWoolen}; ID в зоопарке: {id}");
         }
 
+        public override string ToString()
+        {
+            return $"Млекопитающее: {Name}; Возраст: {Age}; Ареал обитания: {Habitat}; Покрыто шерстью: {isWoolen}; ID в зоопарке: {id}";
+        }
+
         //метод поверхностного копирования
         public override object ShallowCopy()
         {

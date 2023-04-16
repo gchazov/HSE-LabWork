@@ -4,10 +4,13 @@ using MyCollections;
 using Functionality;
 using System.Net.Http.Headers;
 
+//ЛАБОРАТОРНАЯ РАБОТА 12 ВАРИАНТ 4
+
 namespace LabWork12
 {
     internal class Program
     {
+
         static void Main(string[] args)
         {
             //инициализация коллекций по умолчанию
@@ -36,7 +39,7 @@ namespace LabWork12
     В коллекциях могут храниться только объекты типа Animal, имейте в виду.
 
     Для навигации используйте клавиши стрелок вверх и вниз, а также клавишу Enter для ввода.
-    Успеха!
+    Приятнонго пользования!
     ", options);
 
                 return mainMenu.Run();
@@ -136,7 +139,7 @@ namespace LabWork12
 ");
 
                         BinaryTree<Animal> tr = new();
-                        BinaryTree<Animal>.IdealTreeRnd(5, tr);
+                        //BinaryTree<Animal>.IdealTreeRnd(5, tr);
                         
                         
                         Environment.Exit(0);
@@ -146,6 +149,7 @@ namespace LabWork12
         }
 
         #region DoublyLinkedList
+        //самое главное меню
         static int DListMenu(ref DoublyLinkedList<Animal> dList)
         {
             string[] options = { "Создать список","Распечатать список",
@@ -155,6 +159,7 @@ namespace LabWork12
             return dListMenuenu.Run();
         }
 
+        //меню для двунапр. списка
         static int DListMakeMenu(ref DoublyLinkedList<Animal> dList)
         {
             string[] options = { "Заполнение с помощью ДСЧ", "Ввод элементов вручную", "Назад" };
@@ -163,6 +168,7 @@ namespace LabWork12
             return dListMenuenu.Run();
         }
 
+        //создание списка с помощью ДСЧ
         static void DListRandom(ref DoublyLinkedList<Animal> dList)
         {
             Dialog.PrintHeader("Генерация с помощью ДСЧ");
@@ -173,9 +179,11 @@ namespace LabWork12
             Dialog.BackMessage();
         }
 
+        //ввод с помо
         static void DListKeyboard(ref DoublyLinkedList<Animal> dList)
         {
             Dialog.PrintHeader("Добавление элементов вручную");
+            dList = new();
             int size = Dialog.EnterNumber("Введите длину списка:", 0, 1000);
             for (int i = 0; i < size; i++)
             {
@@ -197,12 +205,9 @@ namespace LabWork12
             }
             else
             {
-                Dialog.ColorText($"Длина списка - {dList.Count}, ниже представлены его элементы", "green");
+                Dialog.ColorText($"Длина списка - {dList.Count}, ниже представлены его элементы\n", "green");
                 //можно юзать итератор, т.к. айэнумерэйбл реализован в коллекции
-                foreach(Animal animal in dList)
-                {
-                    animal.Show();
-                }
+                dList.Show();
                 Dialog.BackMessage();
             }
         }
@@ -230,7 +235,7 @@ namespace LabWork12
             else
             {
                 int index = Dialog.EnterNumber("Введите позицию, на которую встанет элемент",
-                    0, dList.Count);
+                    0, dList.Count + 1);
                 dList.Insert(new Animal().RandomInit(), index);
                 Dialog.ColorText($"В список добавлени элемент на {index} позицию! " +
                     "Распечатайте его и убедитесь", "green");
@@ -252,7 +257,7 @@ namespace LabWork12
             else
             {
                 int index = Dialog.EnterNumber("Введите позицию, на которую встанет элемент",
-                    0, dList.Count);
+                    0, dList.Count + 1);
                 dList.Insert(new Animal().Init(), index);
                 Dialog.ColorText($"В список добавлени элемент на {index} позицию! " +
                     "Распечатайте его и убедитесь", "green");
@@ -327,7 +332,8 @@ namespace LabWork12
                 {
                     animal.Show();
                 }
-                Dialog.ColorText("Вот так вот!", "green");
+                clone.Clear();
+                Dialog.ColorText("\nКлон удалён из памяти!", "green");
                 Dialog.BackMessage();
             }
         }
