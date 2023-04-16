@@ -3,6 +3,7 @@ using ConsoleTools;
 using MyCollections;
 using Functionality;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 
 //ЛАБОРАТОРНАЯ РАБОТА 12 ВАРИАНТ 4
 
@@ -110,8 +111,10 @@ namespace LabWork12
                             switch (TreeMenu(ref tree))
                             {
                                 case 0: //СОЗДАТЬ ДЕРЕВО
+                                    TreeMakeIdeal(ref tree);
                                     break;
                                 case 1: //РАСПЕЧАТАТЬ ДЕРЕВО
+                                    TreeShow(ref tree);
                                     break;
                                 case 2: //НАЙТИ МИНИМАЛЬНЫЙ ЭЛЕМЕНТ ДЕРЕВА
                                     break;
@@ -126,7 +129,7 @@ namespace LabWork12
                         break;
                     case 2: //ХЕШ-ТАБЛИЦА
                         break;
-                    case 3: //БИНАРНОЕ ДЕРЕВО ПОИСКА
+                    case 3: //МАЙКОЛЛЕКШН
                         break;
                     case 4: //ЗАВЕРШЕНИЕ РАБОТЫ
                         Dialog.PrintHeader(@"
@@ -173,13 +176,13 @@ namespace LabWork12
         {
             Dialog.PrintHeader("Генерация с помощью ДСЧ");
             int size = Dialog.EnterNumber("Введите длину списка:", 0, 1000);
-            DListMethods.MakeRandomList(ref dList, size);
+            CollectionMethods.MakeRandomList(ref dList, size);
             Dialog.ColorText(dList.isEmpty ? "Пустой список успешно создан!" :
                 $"Двунаправленный список длиной {dList.Count} успешно создан!", "green");
             Dialog.BackMessage();
         }
 
-        //ввод с помо
+        //ввод с помощью клавиатуры
         static void DListKeyboard(ref DoublyLinkedList<Animal> dList)
         {
             Dialog.PrintHeader("Добавление элементов вручную");
@@ -195,6 +198,7 @@ namespace LabWork12
             Dialog.BackMessage();
         }
 
+        //печать списка
         static void DListPrint(ref DoublyLinkedList<Animal> dList)
         {
             Dialog.PrintHeader("Печать списка");
@@ -212,6 +216,7 @@ namespace LabWork12
             }
         }
 
+        //меню вставки элемента на позицию
         static int DListInsert(ref DoublyLinkedList<Animal> dList)
         {
             string[] options = {"Случайный элемент", 
@@ -221,6 +226,7 @@ namespace LabWork12
             return dListMenuenu.Run();
         }
 
+        //вставка элемента на позицию (случайный)
         static void DListInsertRandom(ref DoublyLinkedList<Animal> dList)
         {
             Dialog.PrintHeader("Добавление случайного элемента");
@@ -243,6 +249,7 @@ namespace LabWork12
             }
         }
 
+        //вставка элемента на позицию (с клавы)
         static void DListInsertKeyBoard(ref DoublyLinkedList<Animal> dList)
         {
             Dialog.PrintHeader("Добавление введённого элемента");
@@ -265,6 +272,7 @@ namespace LabWork12
             }
         }
 
+        //переворот списка
         static void DListReverse(ref DoublyLinkedList<Animal> dList)
         {
             Dialog.PrintHeader("Переворот списка");
@@ -276,12 +284,13 @@ namespace LabWork12
             }
             else
             {
-                DListMethods.ReverseList(ref dList);
+                CollectionMethods.ReverseList(ref dList);
                 Dialog.ColorText("Список успешно перевернулся!", "green");
                 Dialog.BackMessage();
             }
         }
 
+        //клонирование списка
         static void DListClone(ref DoublyLinkedList<Animal> dList)
         {
             Dialog.PrintHeader("Клонирование списка");
@@ -338,6 +347,8 @@ namespace LabWork12
             }
         }
 
+
+        //очистка списка
         static void DListClear(ref DoublyLinkedList<Animal> dList)
         {
             Dialog.PrintHeader("Очистка списка");
@@ -357,6 +368,9 @@ namespace LabWork12
 
         #endregion
 
+        #region BinaryTree
+
+        //главное меню для бинарного дерева
         static int TreeMenu(ref BinaryTree<Animal> tree)
         {
             string[] options = { "Создать идеально сбалансированное дерево","Распечатать дерево",
@@ -365,5 +379,49 @@ namespace LabWork12
 
             return TreeMenuenu.Run();
         }
+
+        //создание идеально сбалансированного дерева
+        static void TreeMakeIdeal(ref BinaryTree<Animal> tree)
+        {
+            Dialog.PrintHeader("Создание дерева из случайных элементов");
+            int heigth = Dialog.EnterNumber("Введите количество элементов дерева:", 0, 100);
+            tree = new();
+            if (heigth == 0)
+            {
+                Dialog.ColorText("\nДерево создано! Правда, в нём нет элементов...", "green");
+                Dialog.BackMessage();
+                return;
+            }
+            else
+            {
+                tree = tree.AddFirst();
+                tree = BinaryTree<Animal>.IdealTree(heigth, tree);
+                Dialog.ColorText($"\nБинарное дерево из {heigth} элементов создано!\n" +
+                    $"Распечатайте его и убедитесь в этом", "green");
+                Dialog.BackMessage();
+                return;
+            }
+        }
+
+        //создание идеально сбалансированного дерева
+        static void TreeShow(ref BinaryTree<Animal> tree)
+        {
+            Dialog.PrintHeader("Печать дерева");
+            if (tree.IsEmpty())
+            {
+                Dialog.ColorText("Дерево пустое и не содержит каких-либо элементов", "green");
+                Dialog.BackMessage();
+                return;
+            }
+            else
+            {
+
+                Console.WriteLine("Дерево имеет следующий вид:\n");
+                BinaryTree<Animal>.ShowTree(tree, 1);
+                Dialog.BackMessage();
+                return;
+            }
+        }
+        #endregion
     }
 }

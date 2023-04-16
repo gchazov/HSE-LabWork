@@ -10,94 +10,149 @@ using System.Xml.Linq;
 
 namespace MyCollections
 {
-    public class BinaryTree<Animal>
-        where Animal : IComparable, IInit<Animal>, new()
+    //определение бинарного дерева
+    public class BinaryTree<T> : IComparable
+        where T : IComparable, IInit<T>, new() //для правильной реализации
     {
-        public Animal? Data { get; set; }    //информационное поле
-        public BinaryTree<Animal>? Left { get; private set; }  //адресное поле левого потомка 
-        public BinaryTree<Animal>? Right { get; private set; }   //адресное поле правого потомка 
+        public T? Data { get; set; } //информационное поле
+        public BinaryTree<T>? Left { get; set; } //левый потомок
+        public BinaryTree<T>? Right { get; set; } //правый потомок
 
-        public int Count { get; private set; }  //кол-во элементов в дереве
-
-        public BinaryTree() //конструктор без параметров
+        public BinaryTree(T data = default) //параметр по умолчанию
         {
-            Data = default(Animal);  //используем значение по умолчанию для типа
-            Left = null;    //левый и правый потомки отсутствуют
-            Right = null;
-            Count = 0;
-        }
-
-        public BinaryTree(Animal? data) //конструктор с параметром для типа Animal
-        {
-
             Data = data;
-            Left = null;    //левый и правый потомки отсутствуют
+            Left = null;
             Right = null;
-            Count = 1;
+        }
+
+        //создание первого элемента
+        public BinaryTree<T> AddFirst()
+        {
+            return new(new T().RandomInit());
+        }
+
+        //добавление элемента в дерево
+        public static BinaryTree<T>? Add(BinaryTree<T>? root, T? data)
+        {
+            BinaryTree<T>? point = root; //корень
+            BinaryTree<T>? temp = null;
+
+            bool isAdded = false; //наличие элемента в дереве
+            while (point != null && !isAdded)
+            {
+                temp = point;
+                if (data.Equals(point.Data))
+                    isAdded = true;
+                else
+                {
+                    if (data.CompareTo(point.Data) < 0)
+                        point = point.Left;
+                    else point = point.Right;
+                }
+            }
+
+            if (isAdded) return point;
+
+            BinaryTree<T> newNode = new BinaryTree<T>(data);
+
+            if (data.CompareTo(temp.Data) < 0)
+                temp.Left = newNode;
+            else temp.Right = newNode;
+
+            return newNode;
+        }
+
+        //построение идеально сбалансированного дерева
+        public static BinaryTree<T> IdealTree(int heigth, BinaryTree<T>? newNode)
+        {
+            BinaryTree<T> tree;
+            int nodeLeft, nodeRight;
+
+            if (heigth == 0)
+            {
+                newNode = null;
+                return newNode;
+            }
+            
+            nodeLeft = heigth / 2;
+            nodeRight = heigth - nodeLeft - 1;
+            tree = new BinaryTree<T>(new T().RandomInit());
+            tree.Left = IdealTree(nodeLeft, tree.Left);
+            tree.Right = IdealTree(nodeRight, tree.Right);
+
+            return tree;
+        }
+
+        // проверка пустоты
+        public bool IsEmpty()
+        {
+            return this.Data == null ? true : false;
+        }
+
+        //подсчет
+        public int Recount(BinaryTree<T> tree)
+        {
+            int count = 0;
+
+            if (tree.Left != null)
+                count += Recount(tree.Left);
+
+            count++;
+            return count;
+        }
+
+        //получение минимума дерева
+        public BinaryTree<T>? GetMinimal(BinaryTree<T>? tree)
+        {
+            if (tree != null)
+            {
+                GetMinimal(tree.Left);
+            }
+            return tree;
         }
 
 
-        public override string? ToString()  //для вывода
+        //печать дерева
+        public static void ShowTree(BinaryTree<T>? node, int spaceSize)
+        {
+            if (node != null)
+            {
+                ShowTree(node.Left, spaceSize + 5); //к левому поддереву
+                for (int i = 0; i < spaceSize; i++)
+                {
+                    char symbol = (i + 1) % spaceSize == 0 ? '|' : ' ';
+                    Console.Write(symbol);
+                }
+                Console.WriteLine(node.Data);
+                ShowTree(node.Right, spaceSize + 5);//к правому поддереву
+            }
+        }
+
+        //преобразование в дерево поиска
+        public static void Transform(BinaryTree<T> root, BinaryTree<T>? idtree)
+        {
+            if (idtree != null)
+            {
+                Add(root, idtree.Data);
+                Transform(root, idtree.Left);
+                Transform(root, idtree.Right);
+            }
+            
+        }
+
+        //для вывода узла на экран
+        public override string ToString()
         {
             return Data.ToString();
         }
 
-        private BinaryTree<Animal> SetFirst(Animal data) //установка первого элемента дерева
+        //компаратор для узла
+        public int CompareTo(object? obj)
         {
-            BinaryTree<Animal> tree = new BinaryTree<Animal>(data);
-            return tree;
+            if (obj is BinaryTree<T> item) return Data.CompareTo(item);
+            else throw new ArgumentException();
         }
 
-        public BinaryTree<Animal> Add(BinaryTree<Animal> root, Animal data) //добавление элемента в дерево поиска
-        {
-            if (Count == 0)
-            {
-                SetFirst(data);
-                Count++;
-                return this;
-            }
-            BinaryTree<Animal> treeRoot = root; //корень дерева
-            BinaryTree<Animal> r = null;
-            bool isInside = false; //проверка на существование элемента
-            while (treeRoot != null && !isInside)
-            {
-                r = treeRoot;
-                if (data.Equals(treeRoot.Data)) isInside = true; //если элемент уже существует
-                else
-                {
-                    if (treeRoot.Data.CompareTo(data) < 0) treeRoot = treeRoot.Left; //пойти в левое поддерево
-                    else treeRoot = treeRoot.Right; //пойти в правое поддерево
-                }
-            }
-
-            if (isInside) return treeRoot;//найдено, не добавляем
-
-            BinaryTree<Animal>  newNode = new BinaryTree<Animal>(data);//создаём узел
-
-            if (r.Data.CompareTo(data) > 0) r.Right = newNode;
-
-            else r.Right = newNode;
-            Count++; //увеличиваем счётчик
-            return newNode;
-        }
-
-        public static BinaryTree<Animal> IdealTreeRnd(int size, BinaryTree<Animal> tree)    //идеально сбалансированное дерево
-        {
-            BinaryTree<Animal> root;
-            int newLeft, newRight;
-            if (size == 0) { tree = null; return tree; }
-            newLeft = size / 2;
-            newRight = size - newLeft - 1;
-
-            Animal? data = new Animal();
-            
-            root = new BinaryTree<Animal>(data.RandomInit());
-            root.Left = IdealTreeRnd(newLeft, root.Left);
-            root.Right = IdealTreeRnd(newRight, root.Right);
-            
-            return root;
-        }
-
-
+        
     }
 }
