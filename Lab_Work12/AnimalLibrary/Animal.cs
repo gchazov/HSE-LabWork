@@ -118,6 +118,14 @@ namespace AnimalLibrary
             return this;
         }
 
+
+        //генерация объекта с помощью ДСЧ
+        public Animal GetMaxID()
+        {
+            id.number = 5001;
+            return this;
+        }
+
         //переопределение вирт. метода Equals
         public override bool Equals(object? obj)
         {

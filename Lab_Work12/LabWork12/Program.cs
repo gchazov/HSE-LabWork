@@ -4,6 +4,7 @@ using MyCollections;
 using Functionality;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
+using System.Data;
 
 //ЛАБОРАТОРНАЯ РАБОТА 12 ВАРИАНТ 4
 
@@ -117,8 +118,10 @@ namespace LabWork12
                                     TreeShow(ref tree);
                                     break;
                                 case 2: //НАЙТИ МИНИМАЛЬНЫЙ ЭЛЕМЕНТ ДЕРЕВА
+                                    TreeGetMinimal(ref tree);
                                     break;
                                 case 3: //ПРЕОБРАЗОВАТЬ В ДЕРЕВО ПОИСКА
+                                    TreeTransform(ref tree);
                                     break;
                                 case 4: //В ГЛАВНОЕ МЕНЮ
                                     bTreeRun = false;
@@ -374,7 +377,7 @@ namespace LabWork12
         static int TreeMenu(ref BinaryTree<Animal> tree)
         {
             string[] options = { "Создать идеально сбалансированное дерево","Распечатать дерево",
-                "Найти минимальный элемент дерева", "Преобразовать в дерево поиска", "В главное меню"};
+                "Найти элемент с наименьшим ID", "Преобразовать в дерево поиска", "В главное меню"};
             Menu TreeMenuenu = new("Бинарное дерево", options);
 
             return TreeMenuenu.Run();
@@ -394,7 +397,7 @@ namespace LabWork12
             }
             else
             {
-                tree = tree.AddFirst();
+                BinaryTree<Animal>.Add(tree, new Animal().RandomInit());
                 tree = BinaryTree<Animal>.IdealTree(heigth, tree);
                 Dialog.ColorText($"\nБинарное дерево из {heigth} элементов создано!\n" +
                     $"Распечатайте его и убедитесь в этом", "green");
@@ -418,6 +421,61 @@ namespace LabWork12
 
                 Console.WriteLine("Дерево имеет следующий вид:\n");
                 BinaryTree<Animal>.ShowTree(tree, 1);
+                Dialog.BackMessage();
+                return;
+            }
+        }
+
+        
+        //нахождение минимального элемента в дереве
+        static void TreeGetMinimal(ref BinaryTree<Animal> tree)
+        {
+            Dialog.PrintHeader("Поиск элемента с наименьшим ID");
+            if (tree.IsEmpty())
+            {
+                Dialog.ColorText("Дерево пустое и искать в нём нечего!", "green");
+                Dialog.BackMessage();
+                return;
+            }
+            BinaryTree<Animal> potenital = tree.GetFirst();
+            BinaryTree<Animal>.Transform(potenital, tree);
+
+            if(BinaryTree<Animal>.PrefixWalk(potenital).
+                SequenceEqual(BinaryTree <Animal>.PrefixWalk(tree)))
+            {
+                var result = BinaryTree<Animal>.GetMinimalBST(tree);
+                Dialog.ColorText("Успех! В дереве поиска найден элемент с наименьшим ID:", "green");
+                Console.WriteLine(result);
+                Dialog.BackMessage();
+                return;
+            }
+            else
+            {
+                var list = BinaryTree<Animal>.PrefixWalk(potenital);
+                var result = list.Min();
+                Dialog.ColorText("Успех! В дереве найден элемент с наименьшим ID:", "green");
+                Console.WriteLine(result);
+                Dialog.BackMessage();
+                return;
+            }
+        }
+
+        //преобразование дерева в дерево поиска
+        static void TreeTransform(ref BinaryTree<Animal> tree)
+        {
+            Dialog.PrintHeader("Преобразование в дерево поиска");
+            if (tree.IsEmpty())
+            {
+                Dialog.ColorText("Дерево пустое и преобразовывать особо нечего!", "green");
+                Dialog.BackMessage();
+                return;
+            }
+            else
+            {
+                BinaryTree<Animal> root = tree.GetFirst();
+                BinaryTree<Animal>.Transform(root, tree);
+                tree = root;
+                Dialog.ColorText("Дерево успешно преобразовано в дерево поиска!", "green");
                 Dialog.BackMessage();
                 return;
             }

@@ -11,5 +11,7 @@ namespace AnimalLibrary
     {
         T Init();
         T RandomInit();
+
+        T GetMaxID();
     }
 }

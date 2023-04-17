@@ -25,10 +25,37 @@ namespace MyCollections
             Right = null;
         }
 
+
+        //префиксный обход
+        public static List<T> PrefixWalk(BinaryTree<T> tree)
+        {
+            var list = new List<T>();
+            if (tree != null)
+            {
+                list.Add(tree.Data);
+                if (tree.Left != null)
+                {
+                    list.AddRange(PrefixWalk(tree.Left));
+                }
+                if (tree.Right != null)
+                {
+                    list.AddRange(PrefixWalk(tree.Right));
+                }
+            }
+            return list;
+        }
+
+
         //создание первого элемента
-        public BinaryTree<T> AddFirst()
+        public static BinaryTree<T> AddFirst()
         {
             return new(new T().RandomInit());
+        }
+
+        //получение корня
+        public BinaryTree<T> GetFirst()
+        {
+            return new BinaryTree<T>(this.Data);
         }
 
         //добавление элемента в дерево
@@ -101,15 +128,18 @@ namespace MyCollections
             return count;
         }
 
-        //получение минимума дерева
-        public BinaryTree<T>? GetMinimal(BinaryTree<T>? tree)
+        //получение минимума дерева ПОИСКА
+        public static T? GetMinimalBST(BinaryTree<T>? tree)
         {
-            if (tree != null)
+            T? result = tree.Data;
+            while (tree.Left != null)
             {
-                GetMinimal(tree.Left);
+                result = tree.Left.Data;
+                tree = tree.Left;
             }
-            return tree;
+            return result;
         }
+
 
 
         //печать дерева
@@ -117,14 +147,14 @@ namespace MyCollections
         {
             if (node != null)
             {
-                ShowTree(node.Left, spaceSize + 5); //к левому поддереву
+                ShowTree(node.Right, spaceSize + 5);//к правому поддереву
                 for (int i = 0; i < spaceSize; i++)
                 {
-                    char symbol = (i + 1) % spaceSize == 0 ? '|' : ' ';
+                    char symbol = (i + 1) % spaceSize == 0 ? '|' : '-';
                     Console.Write(symbol);
                 }
                 Console.WriteLine(node.Data);
-                ShowTree(node.Right, spaceSize + 5);//к правому поддереву
+                ShowTree(node.Left, spaceSize + 5); //к левому поддереву
             }
         }
 
@@ -153,6 +183,6 @@ namespace MyCollections
             else throw new ArgumentException();
         }
 
-        
+
     }
 }

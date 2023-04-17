@@ -93,5 +93,11 @@ namespace AnimalLibrary
             else
                 return false;
         }
+
+        public Car GetMaxID()
+        {
+            MaxSpeed = 501;
+            return this;
+        }
     }
 }
