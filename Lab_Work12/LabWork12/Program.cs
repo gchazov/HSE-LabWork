@@ -144,10 +144,10 @@ namespace LabWork12
                                 /____/           
 ");
 
-                        BinaryTree<Animal> tr = new();
-                        //BinaryTree<Animal>.IdealTreeRnd(5, tr);
-                        
-                        
+                        //удаление (зануление) коллекций
+                        dList = new();
+                        tree= new();
+
                         Environment.Exit(0);
                         break;
                 }

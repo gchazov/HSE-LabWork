@@ -14,9 +14,9 @@ namespace MyCollections
     public class BinaryTree<T> : IComparable
         where T : IComparable, IInit<T>, new() //для правильной реализации
     {
-        public T? Data { get; set; } //информационное поле
-        public BinaryTree<T>? Left { get; set; } //левый потомок
-        public BinaryTree<T>? Right { get; set; } //правый потомок
+        public T? Data { get; private set; } //информационное поле
+        public BinaryTree<T>? Left { get; private set; } //левый потомок
+        public BinaryTree<T>? Right { get; private set; } //правый потомок
 
         public BinaryTree(T data = default) //параметр по умолчанию
         {
@@ -55,10 +55,10 @@ namespace MyCollections
         //получение корня
         public BinaryTree<T> GetFirst()
         {
-            return new BinaryTree<T>(this.Data);
+            return new BinaryTree<T>(Data);
         }
 
-        //добавление элемента в дерево
+        //добавление элемента в дерево (для пребразования в дерево поиска)
         public static BinaryTree<T>? Add(BinaryTree<T>? root, T? data)
         {
             BinaryTree<T>? point = root; //корень
@@ -90,19 +90,19 @@ namespace MyCollections
         }
 
         //построение идеально сбалансированного дерева
-        public static BinaryTree<T> IdealTree(int heigth, BinaryTree<T>? newNode)
+        public static BinaryTree<T> IdealTree(int size, BinaryTree<T>? newNode)
         {
             BinaryTree<T> tree;
             int nodeLeft, nodeRight;
 
-            if (heigth == 0)
+            if (size == 0)
             {
                 newNode = null;
                 return newNode;
             }
             
-            nodeLeft = heigth / 2;
-            nodeRight = heigth - nodeLeft - 1;
+            nodeLeft = size / 2;
+            nodeRight = size - nodeLeft - 1;
             tree = new BinaryTree<T>(new T().RandomInit());
             tree.Left = IdealTree(nodeLeft, tree.Left);
             tree.Right = IdealTree(nodeRight, tree.Right);
@@ -113,19 +113,7 @@ namespace MyCollections
         // проверка пустоты
         public bool IsEmpty()
         {
-            return this.Data == null ? true : false;
-        }
-
-        //подсчет
-        public int Recount(BinaryTree<T> tree)
-        {
-            int count = 0;
-
-            if (tree.Left != null)
-                count += Recount(tree.Left);
-
-            count++;
-            return count;
+            return Data == null ? true : false;
         }
 
         //получение минимума дерева ПОИСКА
@@ -139,8 +127,6 @@ namespace MyCollections
             }
             return result;
         }
-
-
 
         //печать дерева
         public static void ShowTree(BinaryTree<T>? node, int spaceSize)
@@ -158,7 +144,7 @@ namespace MyCollections
             }
         }
 
-        //преобразование в дерево поиска
+        //преобразование в дерево поиска (root - новое дерево)
         public static void Transform(BinaryTree<T> root, BinaryTree<T>? idtree)
         {
             if (idtree != null)
@@ -167,7 +153,6 @@ namespace MyCollections
                 Transform(root, idtree.Left);
                 Transform(root, idtree.Right);
             }
-            
         }
 
         //для вывода узла на экран
