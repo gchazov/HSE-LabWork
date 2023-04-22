@@ -253,9 +253,11 @@ namespace MyCollections
         }
 
         //нумератор для работы с циклом foreach
-        public IEnumerator GetEnumerator()
+       
+
+        //получение обобщённого нумератора
+       public  IEnumerator<T> GetEnumerator()
         {
-            //ставим итерируемый элемент головным
             var Current = Head;
             while (Current != null)
             {
@@ -264,12 +266,12 @@ namespace MyCollections
                 //переадресация на следующий
                 Current = Current.Next;
             }
+            
         }
 
-        //получение обобщённого нумератора
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-           return (IEnumerator<T>)GetEnumerator();
+            throw new NotImplementedException();
         }
     }
 }

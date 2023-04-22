@@ -12,7 +12,7 @@ namespace MyCollections
 {
     //определение бинарного дерева
     public class BinaryTree<T> : IComparable
-        where T : IComparable, IInit<T>, new() //для правильной реализации
+        where T : IComparable, IInit<T>, ICloneable, new() //для правильной реализации
     {
         public T? Data { get; private set; } //информационное поле
         public BinaryTree<T>? Left { get; private set; } //левый потомок
@@ -145,13 +145,13 @@ namespace MyCollections
         }
 
         //преобразование в дерево поиска (root - новое дерево)
-        public static void Transform(BinaryTree<T> root, BinaryTree<T>? idtree)
+        public static void Transform(BinaryTree<T> root, BinaryTree<T>? idealTree)
         {
-            if (idtree != null)
+            if (idealTree != null)
             {
-                Add(root, idtree.Data);
-                Transform(root, idtree.Left);
-                Transform(root, idtree.Right);
+                Add(root, (T)idealTree.Data.Clone());
+                Transform(root, idealTree.Left);
+                Transform(root, idealTree.Right);
             }
         }
 
