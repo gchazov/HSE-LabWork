@@ -153,10 +153,7 @@ namespace LabWork12
                                 case 4: //НАЙТИ ЭЛЕМЕНТ В ХЕШ-ТАБЛИЦЕ
                                     HTableFind(ref htable);
                                     break;
-                                case 5: //УДАЛИТЬ ЭЛЕМЕНТ ИЗ ХЕШ-ТАБЛИЦЫ
-                                    HTableDelete(ref htable);
-                                    break;
-                                case 6: //В ГЛАВНОЕ МЕНЮ
+                                case 5: //В ГЛАВНОЕ МЕНЮ
                                     hTableRun = false;
                                     break;
 
@@ -178,7 +175,7 @@ namespace LabWork12
                         //удаление (зануление) коллекций
                         dList = new();
                         tree= new();
-
+                        htable = new();
                         Environment.Exit(0);
                         break;
                 }
@@ -521,7 +518,7 @@ namespace LabWork12
         static int HTableMenu(ref HTable<Animal> htable)
         {
             string[] options = { "Создать хеш-таблицу", "Заполнить структуру","Распечатать хеш-таблицу",
-                "Добавить элемент в хеш-таблицу", "Поиск элемента в хеш-таблице", "Удаление элемента", "В главное меню"};
+                "Добавить элемент в хеш-таблицу", "Поиск и удаление элемента", "В главное меню"};
             Menu dListMenuenu = new("Двунаправленный список", options);
 
             return dListMenuenu.Run();
@@ -604,7 +601,7 @@ namespace LabWork12
 
         private static void HTableFind(ref HTable<Animal> htable)
         {
-            Dialog.PrintHeader("Поиск элемента в хеш-таблице");
+            Dialog.PrintHeader("Поиск и удаление элемента в хеш-таблице");
             if (htable.Size == 0)
             {
                 Dialog.ColorText("В пустой таблице искать нечего! Заполните уже её!", "green");
@@ -629,15 +626,17 @@ namespace LabWork12
                         animal = new Artiodactyl().Init();
                         break;
                 }
-                var result = htable.FindElementData(animal);
-                if (result == null)
+
+                bool result = htable.FindElementData(animal);
+                if (result == false)
                 {
                     Dialog.ColorText("\nВ таблице такого элемента нет!");
                 }
                 else
                 {
-                    Dialog.ColorText("\nУспех! В таблице найден искомый элемент и он имеет вид:!", "green");
-                    Console.WriteLine(result);
+                    var animalResult = htable.DeleteElement(animal);
+                    Dialog.ColorText("\nУспех! Из таблицы удалён искомый элемент и он имеет вид:", "green");
+                    Console.WriteLine(animalResult);
                 }
             }
             Dialog.BackMessage();
@@ -651,11 +650,6 @@ namespace LabWork12
             Menu dListMenuenu = new("Выбор типа объекта", options);
 
             return dListMenuenu.Run();
-        }
-
-        private static void HTableDelete(ref HTable<Animal> htable)
-        {
-            throw new NotImplementedException();
         }
         #endregion
     }

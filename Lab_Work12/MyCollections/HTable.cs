@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MyCollections
 {
     public class HTable<T>
+        where T : class
     {
         public HashPoint<T>[] Table { get; private set; } //массив пар
         public int Size { get; private set; } //размер
@@ -26,7 +28,7 @@ namespace MyCollections
             {
                 HashPoint<T> current = Table[index];
                 if (current.Equals(point)) return false;
-                while(current.Next != null)
+                while (current.Next != null)
                 {
                     if (current.Equals(point)) return false;
                     current = current.Next;
@@ -41,10 +43,10 @@ namespace MyCollections
             string result = "";
             for (int i = 0; i < Size; ++i)
             {
-                if (Table[i] == null)result += "\nЯчейка памяти " + (i+1).ToString() + " : Empty_NoData_Available";
+                if (Table[i] == null) result += "\nЯчейка памяти " + (i + 1).ToString() + " : Empty_NoData_Available";
                 else
                 {
-                    result += "\nЯчейка памяти " + (i+1).ToString() + ":";
+                    result += "\nЯчейка памяти " + (i + 1).ToString() + ":";
                     HashPoint<T> point = Table[i];
                     while (point != null)
                     {
@@ -57,52 +59,47 @@ namespace MyCollections
             return result;
         }
 
-        public HashPoint<T>? FindElementData(T data) //поиск элемента по значению
-            //возвращает Null, если элемента нет
+        public bool FindElementData(T data) //поиск элемента по значению
+                                            //возвращает Null, если элемента нет
         {
             HashPoint<T> point = new(data);
             int pointIndex = Math.Abs(point.GetHashCode()) % Size;
-            if (Table[pointIndex] == null)  return null;
+            if (String.Compare(Table[pointIndex].Value.ToString(), data.ToString()) == 0) return true;
             else
             {
-                HashPoint<T> current = Table[pointIndex];
-                if (current.Equals(point)) return current;
-                while (current.Next != null)
+                point = Table[pointIndex];
+                while (point != null)
                 {
-                    if (current.Equals(point)) return current;
-                }
-                return null;
-            }
-        }
-
-        public HashPoint<T>? DeleteElement(T data) //удаление элемента из хеш-тейбл
-        {
-            if (Table.Length == 0) throw new ArgumentNullException();
-            HashPoint<T> point = new(data);
-            int index = Math.Abs(point.GetHashCode()) % Size;
-
-            if (Table[index] == null) return null;
-            if (Table[index].Next == null) 
-            {
-                Table[index] = null;
-                return Table[index];
-            }
-            else
-            {
-                point = Table[index];
-                while (point.Next != null && !point.Next.Equals(point))
-                {
+                    if (point.Value.Equals(data)) return true;
                     point = point.Next;
-                    if (point.Next != null)
-                    {
-                        var result = new HashPoint<T>(data);
-                        point.Next = point.Next.Next;
-                        return result;
-                    }
                 }
-                return null;
+                return false;
             }
         }
 
+        public T DeleteElement(T data)
+        {
+            HashPoint<T> point = new HashPoint<T>(data);
+            int code = Math.Abs(point.GetHashCode()) % Size;
+            point = Table[code];
+            if (Table[code] == null) return null;
+            if (Table[code] != null && String.Compare(Table[code].Value.ToString(), data.ToString()) == 0)
+            {
+                point = Table[code];
+                Table[code] = Table[code].Next;
+                return point.Value;
+            }
+            while (point.Next != null && (string.Compare(point.Next.Value.ToString(), data.ToString()) != 0))
+                point = point.Next;
+            if (point.Next != null)
+            {
+                data = point.Next.Value;
+                point.Next = point.Next.Next;
+                return data;
+            }
+            return null;
+
+
+        }
     }
 }
