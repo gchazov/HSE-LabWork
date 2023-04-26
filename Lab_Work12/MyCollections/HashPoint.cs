@@ -9,8 +9,8 @@ namespace MyCollections
     //класс-описание элемента хеш-таблицы
     public class HashPoint<T>
     {
-        public int Key { get; set; } //ключ элемента
-        public T? Value { get; set; } //информационное поле элемента
+        public int Key { get; private set; } //ключ элемента
+        public T Value { get; private set; } //информационное поле элемента
 
         public HashPoint<T>? Next { get; set; } //следующий элемент (в цепочке)
 
@@ -36,7 +36,7 @@ namespace MyCollections
             return hcode;
         }
 
-        public override bool Equals(object? obj) //переопределение Equals
+        public override bool Equals(object? obj) //переопределение Equals для сравнения
         {
             return String.Compare(this.ToString(), obj.ToString()) == 0;
         }

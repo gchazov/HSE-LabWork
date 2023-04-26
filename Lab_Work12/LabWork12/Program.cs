@@ -18,9 +18,10 @@ namespace LabWork12
             //инициализация коллекций по умолчанию
             DoublyLinkedList<Animal> dList = new();
             BinaryTree<Animal> tree = new();
+            HTable<Animal> htable = new();
 
             //запуск выполнения всех методов подряд
-            Run(ref dList, ref tree);
+            Run(ref dList, ref tree, ref htable);
         }
 
 
@@ -48,7 +49,8 @@ namespace LabWork12
             }
 
         static void Run(ref DoublyLinkedList<Animal> dList,
-            ref BinaryTree<Animal> tree)
+            ref BinaryTree<Animal> tree,
+            ref HTable<Animal> htable)
         {
             do
             {
@@ -131,6 +133,35 @@ namespace LabWork12
                         } while (bTreeRun);
                         break;
                     case 2: //ХЕШ-ТАБЛИЦА
+                        var hTableRun = true;
+                        do
+                        {
+                            switch (HTableMenu(ref htable))
+                            {
+                                case 0: //СОЗДАТЬ ХЕШ-ТАБЛИЦУ
+                                    HTableMakeMenu(ref htable);
+                                    break;
+                                case 1: //ЗАПОЛНИТЬ ХЕШ-ТАБЛИЦУ
+                                    HTableFill(ref htable);
+                                    break;
+                                case 2: //РАСПЕЧАТАТЬ ХЕШ-ТАБЛИЦУ
+                                    HTablePrint(ref htable);
+                                    break;
+                                case 3: //ДОБАВИТЬ ЭЛЕМЕНТ В ХЕШ-ТАБЛИЦУ
+                                    HTableAdd(ref htable);
+                                    break;
+                                case 4: //НАЙТИ ЭЛЕМЕНТ В ХЕШ-ТАБЛИЦЕ
+                                    HTableFind(ref htable);
+                                    break;
+                                case 5: //УДАЛИТЬ ЭЛЕМЕНТ ИЗ ХЕШ-ТАБЛИЦЫ
+                                    HTableDelete(ref htable);
+                                    break;
+                                case 6: //В ГЛАВНОЕ МЕНЮ
+                                    hTableRun = false;
+                                    break;
+
+                            }
+                        } while (hTableRun);
                         break;
                     case 3: //МАЙКОЛЛЕКШН
                         break;
@@ -481,6 +512,75 @@ namespace LabWork12
                 Dialog.BackMessage();
                 return;
             }
+        }
+        #endregion
+
+        #region HashTable
+
+        //самое главное меню
+        static int HTableMenu(ref HTable<Animal> htable)
+        {
+            string[] options = { "Создать хеш-таблицу", "Заполнить структуру","Распечатать хеш-таблицу",
+                "Добавить элемент в хеш-таблицу", "Поиск элемента в хеш-таблице", "Удаление элемента", "В главное меню"};
+            Menu dListMenuenu = new("Двунаправленный список", options);
+
+            return dListMenuenu.Run();
+        }
+
+        //создание хеш-таблицы
+        static void HTableMakeMenu(ref HTable<Animal> htable)
+        {
+            Dialog.PrintHeader("Создание хеш-таблицы");
+            htable = new HTable<Animal>(Dialog.EnterNumber("Введите размер будущей хеш-таблицы:", 0, 100));
+            if (htable.Size == 0)
+            {
+                Dialog.ColorText("Пустая хеш-таблица успешно создана!", "green");
+            }
+            else
+            {
+                Dialog.ColorText($"Хеш-таблица длиной {htable.Size} успешно создана!\n" +
+                    $"Чтобы в ней появились элементы, используйте второй пункт предыдущего меню", "green");
+            }
+            Dialog.BackMessage();
+        }
+
+        private static void HTableFill(ref HTable<Animal> htable)
+        {
+            Dialog.PrintHeader("Заполнение хеш-таблицы");
+            if (htable.Size == 0)
+            {
+                Dialog.ColorText("Сначала стоит создать структуру данных, а потом уже её заполнять!", "green");
+            }
+            else
+            {
+                for(int i = 0; i < htable.Size; i++)
+                    htable.Add(CollectionMethods.GetRandomAnimal());
+
+                Dialog.ColorText($"Хеш-таблица заполнена случайными элементами иерархии Animal!\n" +
+                    $"Убедитесь в этом, распечатав коллекцию", "green");
+            }
+            Dialog.BackMessage();
+        }
+
+        private static void HTablePrint(ref HTable<Animal> htable)
+        {
+            Console.WriteLine(htable);
+            Dialog.BackMessage();
+        }
+
+        private static void HTableAdd(ref HTable<Animal> htable)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void HTableFind(ref HTable<Animal> htable)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void HTableDelete(ref HTable<Animal> htable)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }
