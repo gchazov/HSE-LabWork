@@ -23,7 +23,7 @@ namespace MyCollections
 
         public override string ToString() //для вывода через cw()
         {
-            return Key.ToString() + ":" + Value.ToString();
+            return Key.ToString() + " : " + Value.ToString();
         }
 
         public override int GetHashCode() //получение хеш-кода элемента

@@ -41,14 +41,14 @@ namespace MyCollections
             string result = "";
             for (int i = 0; i < Size; ++i)
             {
-                if (Table[i] == null) result += i.ToString() + ":";
+                if (Table[i] == null)result += "\nЯчейка памяти " + (i+1).ToString() + " : Empty_NoData_Available";
                 else
                 {
-                    result += i.ToString() + ":";
+                    result += "\nЯчейка памяти " + (i+1).ToString() + ":";
                     HashPoint<T> point = Table[i];
                     while (point != null)
                     {
-                        result += point.ToString() + "\t";
+                        result += "\n\t" + point.ToString();
                         point = point.Next;
                     }
                     result += "\n";
@@ -66,6 +66,7 @@ namespace MyCollections
             else
             {
                 HashPoint<T> current = Table[pointIndex];
+                if (current.Equals(point)) return current;
                 while (current.Next != null)
                 {
                     if (current.Equals(point)) return current;

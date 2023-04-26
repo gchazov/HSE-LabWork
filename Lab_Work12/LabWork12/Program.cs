@@ -553,6 +553,7 @@ namespace LabWork12
             }
             else
             {
+                htable = new(htable.Size);
                 for(int i = 0; i < htable.Size; i++)
                     htable.Add(CollectionMethods.GetRandomAnimal());
 
@@ -564,18 +565,92 @@ namespace LabWork12
 
         private static void HTablePrint(ref HTable<Animal> htable)
         {
-            Console.WriteLine(htable);
+            Dialog.PrintHeader("Печать хеш-таблицы");
+            if (htable.Size == 0)
+            {
+                Dialog.ColorText("Хеш-таблица пустая! Заполните её, а там уже интереснее будет!", "green");
+            }
+            else
+            {
+                Dialog.ColorText($"Структура хеш-таблицы из {htable.Size} ячеек памяти " +
+                    $"и элементов выглядит следующим образом:\n", "green");
+                Console.WriteLine(htable);
+            }
             Dialog.BackMessage();
         }
 
         private static void HTableAdd(ref HTable<Animal> htable)
         {
-            throw new NotImplementedException();
+            Dialog.PrintHeader("Добавление в таблицу случайного объекта");
+            if (htable.Size == 0)
+            {
+                htable = new(1);
+                var toAdd = CollectionMethods.GetRandomAnimal();
+                htable.Add(toAdd);
+                Dialog.ColorText("Хеш-таблица была пустая! До настоящего момента\n" +
+                    "Теперь в ней содержится 1 добавленный элемент:", "green");
+                Console.WriteLine(toAdd);
+            }
+            else
+            {
+                var toAdd = CollectionMethods.GetRandomAnimal();
+                htable.Add(toAdd);
+                Dialog.ColorText("В хеш-таблицу добавлен новый элемент!\n" +
+                    "Он имеет вид:", "green");
+                Console.WriteLine(toAdd);
+            }
+            Dialog.BackMessage();
         }
 
         private static void HTableFind(ref HTable<Animal> htable)
         {
-            throw new NotImplementedException();
+            Dialog.PrintHeader("Поиск элемента в хеш-таблице");
+            if (htable.Size == 0)
+            {
+                Dialog.ColorText("В пустой таблице искать нечего! Заполните уже её!", "green");
+            }
+            else
+            {
+                var animal = new Animal();
+                int choice = FindMenu(ref htable);
+                Dialog.PrintHeader("Поиск элемента");
+                switch (choice)
+                {
+                    case 0:
+                        animal = new Animal().Init();
+                        break;
+                    case 1:
+                        animal = new Bird().Init();
+                        break;
+                    case 2:
+                        animal = new Mammal().Init();
+                        break;
+                    case 3:
+                        animal = new Artiodactyl().Init();
+                        break;
+                }
+                var result = htable.FindElementData(animal);
+                if (result == null)
+                {
+                    Dialog.ColorText("\nВ таблице такого элемента нет!");
+                }
+                else
+                {
+                    Dialog.ColorText("\nУспех! В таблице найден искомый элемент и он имеет вид:!", "green");
+                    Console.WriteLine(result);
+                }
+            }
+            Dialog.BackMessage();
+        }
+
+        //самое главное меню
+        static int FindMenu(ref HTable<Animal> htable)
+        {
+            string[] options = { "Животное", "Птица","Млекопитающее",
+                "Парнокопытное"};
+            Menu dListMenuenu = new("Выбор типа объекта", options);
+
+            return dListMenuenu.Run();
         }
 
         private static void HTableDelete(ref HTable<Animal> htable)
