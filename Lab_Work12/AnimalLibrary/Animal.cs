@@ -172,5 +172,9 @@ namespace AnimalLibrary
             return $"Животное: {Name}; Возраст: {Age}; Ареал обитания: {Habitat}; ID в зоопарке: {id}";
         }
 
+        public Animal GetBase()
+        {
+            return new Animal(Name, Age, Habitat, id.number);
+        }
     }
 }

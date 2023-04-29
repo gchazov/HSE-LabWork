@@ -7,7 +7,7 @@ using ConsoleTools;
 
 namespace AnimalLibrary
 {
-    public class Artiodactyl : Mammal
+    public class Artiodactyl : Mammal, IInit<Animal>
     {
 
         protected string hornStyle;
@@ -103,6 +103,11 @@ namespace AnimalLibrary
         public override object Clone()
         {
             return new Artiodactyl(Name, Age, Habitat, IsWoolen, HornStyle, id.number);
+        }
+
+        public Animal GetBase()
+        {
+            return new Animal(Name, Age, Habitat, id.number);
         }
     }
 }

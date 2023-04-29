@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AnimalLibrary;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 namespace MyCollections
 {
     public class HTable<T>
-        where T : class
+        where T : class, IInit<T>
     {
         public HashPoint<T>[] Table { get; private set; } //массив пар
         public int Size { get; private set; } //размер
@@ -59,37 +60,40 @@ namespace MyCollections
             return result;
         }
 
+        //поиск элемента
         public bool FindElementData(T data) //поиск элемента по значению
                                             //возвращает Null, если элемента нет
         {
             HashPoint<T> point = new(data);
             int pointIndex = Math.Abs(point.GetHashCode()) % Size;
-            if (String.Compare(Table[pointIndex].Value.ToString(), data.ToString()) == 0) return true;
+            if (Table[pointIndex] != null 
+                && Table[pointIndex].Key.Equals(data)) return true;
             else
             {
                 point = Table[pointIndex];
                 while (point != null)
                 {
-                    if (point.Value.Equals(data)) return true;
+                    if (point.Key.Equals(data)) return true;
                     point = point.Next;
                 }
                 return false;
             }
         }
 
+        //удаление элемента
         public T DeleteElement(T data)
         {
             HashPoint<T> point = new HashPoint<T>(data);
             int code = Math.Abs(point.GetHashCode()) % Size;
             point = Table[code];
             if (Table[code] == null) return null;
-            if (Table[code] != null && String.Compare(Table[code].Value.ToString(), data.ToString()) == 0)
+            if (Table[code] != null && Table[code].Key.Equals(data))
             {
                 point = Table[code];
                 Table[code] = Table[code].Next;
                 return point.Value;
             }
-            while (point.Next != null && (string.Compare(point.Next.Value.ToString(), data.ToString()) != 0))
+            while (point.Next != null && !point.Next.Key.Equals(data))
                 point = point.Next;
             if (point.Next != null)
             {
@@ -98,8 +102,6 @@ namespace MyCollections
                 return data;
             }
             return null;
-
-
         }
     }
 }

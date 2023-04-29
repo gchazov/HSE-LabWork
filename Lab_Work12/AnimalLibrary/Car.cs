@@ -99,5 +99,10 @@ namespace AnimalLibrary
             MaxSpeed = 501;
             return this;
         }
+
+        public Car GetBase()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

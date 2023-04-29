@@ -8,7 +8,7 @@ using ConsoleTools;
 namespace AnimalLibrary
 {
     //класс Bird наследуемый от суперкласса Animal
-    public class Bird : Animal, ICloneable
+    public class Bird : Animal, ICloneable, IInit<Animal>
     {
         protected bool flyAbility;
         protected string[] birdArray = { "Воробей", "Страус", "Пеликан", "Индюк",
@@ -106,6 +106,11 @@ namespace AnimalLibrary
         public override string ToString()
         {
             return $"Птица: {Name}; Возраст: {Age}; Ареал обитания: {Habitat}; Умение летать: {FlyAbility}; ID в зоопарке: {id}";
+        }
+
+        public Animal GetBase()
+        {
+            return new Animal(Name, Age, Habitat, id.number);
         }
 
     }

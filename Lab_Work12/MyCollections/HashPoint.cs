@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AnimalLibrary;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,9 @@ namespace MyCollections
 {
     //класс-описание элемента хеш-таблицы
     public class HashPoint<T>
+        where T : IInit<T>
     {
-        public int Key { get; private set; } //ключ элемента
+        public T Key { get; private set; } //ключ элемента
         public T Value { get; private set; } //информационное поле элемента
 
         public HashPoint<T>? Next { get; set; } //следующий элемент (в цепочке)
@@ -18,21 +20,22 @@ namespace MyCollections
         {
             Value = data;
             Next = null;
-            Key = GetHashCode();
+            Key = Value.GetBase();
         }
 
         public override string ToString() //для вывода через cw()
         {
-            return Key.ToString() + " : " + Value.ToString();
+            return Key.ToString() + " => " + Value.ToString();
         }
 
         public override int GetHashCode() //получение хеш-кода элемента
         {
             int hcode = 0;
-            foreach (char letter in Value.ToString())
+            foreach (char letter in Key.ToString())
             {
                 hcode += (int)letter;
             }
+            // hcode=Key.GetHashCode();
             return hcode;
         }
 

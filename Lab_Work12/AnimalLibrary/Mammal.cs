@@ -8,7 +8,7 @@ using ConsoleTools;
 
 namespace AnimalLibrary
 {
-    public class Mammal : Animal
+    public class Mammal : Animal, IInit<Animal>
     {
         protected bool isWoolen;
         string[] mammalArray = { "Броненосец", "Слон", "Коала", "Ёж", "Бурый медведь",
@@ -94,6 +94,11 @@ namespace AnimalLibrary
         public override object Clone()
         {
             return new Mammal(Name, Age, Habitat, IsWoolen, id.number);
+        }
+
+        public Animal GetBase()
+        {
+            return new Animal(Name, Age, Habitat, id.number);
         }
     }
 }

@@ -541,6 +541,7 @@ namespace LabWork12
             Dialog.BackMessage();
         }
 
+        //заполнение таблицы
         private static void HTableFill(ref HTable<Animal> htable)
         {
             Dialog.PrintHeader("Заполнение хеш-таблицы");
@@ -560,6 +561,7 @@ namespace LabWork12
             Dialog.BackMessage();
         }
 
+        //печать хт
         private static void HTablePrint(ref HTable<Animal> htable)
         {
             Dialog.PrintHeader("Печать хеш-таблицы");
@@ -576,6 +578,7 @@ namespace LabWork12
             Dialog.BackMessage();
         }
 
+        //добавление в хеш-таблицу
         private static void HTableAdd(ref HTable<Animal> htable)
         {
             Dialog.PrintHeader("Добавление в таблицу случайного объекта");
@@ -599,6 +602,7 @@ namespace LabWork12
             Dialog.BackMessage();
         }
 
+        //поиск элемента в хт
         private static void HTableFind(ref HTable<Animal> htable)
         {
             Dialog.PrintHeader("Поиск и удаление элемента в хеш-таблице");
@@ -608,24 +612,8 @@ namespace LabWork12
             }
             else
             {
-                var animal = new Animal();
-                int choice = FindMenu(ref htable);
-                Dialog.PrintHeader("Поиск элемента");
-                switch (choice)
-                {
-                    case 0:
-                        animal = new Animal().Init();
-                        break;
-                    case 1:
-                        animal = new Bird().Init();
-                        break;
-                    case 2:
-                        animal = new Mammal().Init();
-                        break;
-                    case 3:
-                        animal = new Artiodactyl().Init();
-                        break;
-                }
+                Console.WriteLine("Введите ключ элемента для поиска и удаления:");
+                var animal = new Animal().Init();
 
                 bool result = htable.FindElementData(animal);
                 if (result == false)
@@ -642,7 +630,7 @@ namespace LabWork12
             Dialog.BackMessage();
         }
 
-        //самое главное меню
+        //меню поиска
         static int FindMenu(ref HTable<Animal> htable)
         {
             string[] options = { "Животное", "Птица","Млекопитающее",
