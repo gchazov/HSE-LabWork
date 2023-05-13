@@ -142,9 +142,13 @@ namespace AnimalLibrary
 
         public override int GetHashCode()
         {
-            //для словаря (сортированного)
-            return Name.GetHashCode() + Age.GetHashCode() 
-                + Habitat.GetHashCode() + id.GetHashCode();
+            //для словаря (сортированного) and ht
+            int result = 0;
+            foreach (char c in this.ToString())
+            {
+                result += (int)c;
+            }
+            return result;
         }
 
         //метод поверхностного копирования

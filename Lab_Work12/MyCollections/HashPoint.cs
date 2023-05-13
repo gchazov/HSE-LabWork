@@ -30,13 +30,7 @@ namespace MyCollections
 
         public override int GetHashCode() //получение хеш-кода элемента
         {
-            int hcode = 0;
-            foreach (char letter in Key.ToString())
-            {
-                hcode += (int)letter;
-            }
-            // hcode=Key.GetHashCode();
-            return hcode;
+            return Key.GetHashCode();
         }
 
         public override bool Equals(object? obj) //переопределение Equals для сравнения
