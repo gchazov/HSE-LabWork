@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 namespace MyCollections
 {
     //класс-описание элемента хеш-таблицы
+    //ИСПОЛЬЗУЕТСЯ КАК В 3, ТАК И В 4 ЧАСТИ РАБОТЫ!!!
     public class HashPoint<T>
-        where T : IInit<T>
+        where T : IInit<T>, ICloneable
     {
         public T Key { get; private set; } //ключ элемента
         public T Value { get; private set; } //информационное поле элемента

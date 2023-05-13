@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MyCollections
 {
     public class HTable<T>
-        where T : class, IInit<T>
+        where T : class, IInit<T>, ICloneable
     {
         public HashPoint<T>[] Table { get; private set; } //массив пар
         public int Size { get; private set; } //размер

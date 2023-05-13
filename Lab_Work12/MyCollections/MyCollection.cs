@@ -4,81 +4,195 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MyCollections
 {
-    public class MyCollection<T>: ICollection
-        where T: class, IInit<T>, ICloneable, new()
+    //ХЕШ-ТАБЛИЦА (МЕТОД ЦЕПОЧЕК)
+    public class MyCollection<T> : ICollection<T>, IEnumerable<T>, ICloneable
+        where T : class, IInit<T>, ICloneable, new()
     {
+        private HashPoint<T>[] Table { get; set; } //таблица с цепочками
 
-        public DoublyLinkedList<T>[]Table { get; private set; } 
-        public MyCollection()
+        public int Count { get; private set; } //СЧЁТЧИК ЭЛЕМЕНТОВ
+
+        public int Length { get; private set; } //СЧЁТЧИК ЦЕПОЧЕК
+
+        public MyCollection()   //конструктор без парпамтеров
         {
-            Table = (DoublyLinkedList<T>[]?)Array.Empty<object>();
+            Table = Array.Empty<HashPoint<T>>();
+            Count = 0;
+            Length = 0;
         }
 
-        public MyCollection(int size)
+        public MyCollection(int capacity)   //пустая коллекция с ук. ёмкостью
         {
-            Table = new DoublyLinkedList<T>[size];
+            Table = new HashPoint<T>[capacity];
+            Length = capacity;
+            Count = 0;
         }
 
-        public MyCollection(MyCollection<T> origin)
+        public MyCollection(MyCollection<T> origin)     //коллекция на основе другой коллекции
         {
-            MyCollection<T> clone = new(origin.Table.Length);
-            for (int i = 0; i < origin.Table.Length; i++)
+            Table = new HashPoint<T>[origin.Length]; Length = origin.Length;
+            for (int i = 0; i < origin.Length; ++i)
             {
-                clone.Table[i] = origin.Table[i].Clone();
+                HashPoint<T> current = origin.Table[i];
+                while(current != null)
+                {
+                    Add((T)current.Value.Clone());
+                    current = current.Next;
+                }
             }
         }
 
-        public void Add(T data) //добавление одного элемента в хт
-        {
-            Table[data.GetBase().GetHashCode()%Table.Length].AddLast(data);
-        }
+        public bool IsReadOnly => false;    //не только для чтения
 
-        public void AddRange(params T[] values) //добавление нескольких...
-        {
-            for (int i = 0; i < values.Length; i++)
-                Table[values[i].GetBase().GetHashCode() % Table.Length].
-                    AddLast(values[i]);
-        }
 
-        public bool FindElement(T data) //поиск элемента в коллекции
+        public void Add(T item)     //добавление элемента в хеш-таблицу
         {
-            int index = data.GetBase().GetHashCode() % Table.Length;
-            DoublyLinkedList<T> current = Table[index];
-            foreach (var item in current)
+            HashPoint<T> point = new(item);
+            if (item == null) return;
+            int index = Math.Abs(point.GetHashCode()) % Length;
+            if (Table[index] == null)
+            { 
+                Table[index] = point;
+                Count++;
+            }
+            else
             {
-                if (current.Equals(item))
-                    return true;
+                HashPoint<T> current = Table[index];
+                if (current.Equals(point)) return;
+                while (current.Next != null)
+                {
+                    if (current.Equals(point)) return;
+                    current = current.Next;
+                }
+                current.Next = point;
+                Count++;
+            }
+            return;
+        }
+
+        public void AddRange(params T[] values) //добавление нескольких элементов в хт
+        {
+            foreach (T item in values)
+                Add(item);
+        }
+
+        public bool Remove(T item)  //добавление элемента
+        {
+            HashPoint<T> point = new HashPoint<T>(item);
+            int code = Math.Abs(point.GetHashCode()) % Length;
+            point = Table[code];
+            if (Table[code] == null) return false;
+            if (Table[code] != null && Table[code].Key.Equals(item))
+            {
+                point = Table[code];
+                Table[code] = Table[code].Next;
+                Count--;
+                return true;
+            }
+            while (point.Next != null && !point.Next.Key.Equals(item))
+                point = point.Next;
+            if (point.Next != null)
+            {
+                item = point.Next.Value;
+                point.Next = point.Next.Next;
+                Count--;
+                return true;
             }
             return false;
         }
 
-        public T DeleteElement(T data) //поиск элемента в коллекции
+        public void RemoveRange(params T[] values)  //удаление нескольких элементов
         {
-            if (!this.FindElement(data)) return null;
-            //TODO
-            return (T)data;
+            foreach (T item in values)
+                Remove(item);
+        }
+
+        public void Clear()     //очистка коллекции
+        {
+            _ = new MyCollection<T>();
+        }
+
+        public bool Contains(T item)    //проверка на содержание элемента в коллекции
+           //(по ключу, само собой)
+        {
+            HashPoint<T> point = new(item);
+            int pointIndex = Math.Abs(point.GetHashCode()) % Length;
+            if (Table[pointIndex] != null
+                && Table[pointIndex].Key.Equals(item)) return true;
+            else
+            {
+                point = Table[pointIndex];
+                while (point != null)
+                {
+                    if (point.Key.Equals(item)) return true;
+                    point = point.Next;
+                }
+                return false;
+            }
+        }
+
+        public void CopyTo(T[] array, int arrayIndex)   //копирование в массив
+            //начиная с определённой цепочки
+        {
+            if (arrayIndex < 0 || arrayIndex >= Length)
+                throw new ArgumentOutOfRangeException();
+            for (int i = arrayIndex; i < Length; i++)
+            {
+                HashPoint<T> current = Table[i];
+                while (current.Next != null)
+                {
+                    array.Append((T)current.Value.Clone());
+                    current = current.Next;
+                }
+            }
         }
 
 
-        public int Count => throw new NotImplementedException();
-
-        public bool IsSynchronized => throw new NotImplementedException();
-
-        public object SyncRoot => throw new NotImplementedException();
-
-        public void CopyTo(Array array, int index)
+        public IEnumerator<T> GetEnumerator()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerator GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             throw new NotImplementedException();
+        }
+
+        public object Clone()   //глубокое клонирование
+        {
+            MyCollection<T> clone = new MyCollection<T>(Length);
+            for (int i = 0; i < Length; ++i)
+            {
+                HashPoint<T> current = Table[i];
+                while (current != null)
+                {
+                    clone.Add((T)current.Value.Clone()); //здесь клонируем даже элементы
+                    current = current.Next;
+                }
+            }
+            return clone;
+        }
+
+        public object ShallowCopy()     //поверхностное копирование
+        {
+            MyCollection<T> copy = new MyCollection<T>(Length);
+            for (int i = 0; i < Length; ++i)
+            {
+                HashPoint<T> current = Table[i];
+                while (current != null)
+                {
+                    copy.Add(current.Value);   //здесь уже не клонируем по элементам
+                    current = current.Next;
+                }
+            }
+            return copy;
         }
     }
 }

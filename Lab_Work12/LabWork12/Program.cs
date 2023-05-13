@@ -176,6 +176,9 @@ namespace LabWork12
                         dList = new();
                         tree= new();
                         htable = new();
+                        HTable<Animal> hTable = new(1);
+                        hTable.Add(new Animal("1", 2, "3", 4));
+                        Console.WriteLine(hTable);
                         Environment.Exit(0);
                         break;
                 }
