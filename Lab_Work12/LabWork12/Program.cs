@@ -29,7 +29,7 @@ namespace LabWork12
         static int MainMenu(ref DoublyLinkedList<Animal> dList)
             {
                 string[] options = { "Двунаправленный список","Бинарное дерево", 
-                    "Хеш-таблица", "MyCollection", "Завершить работу"};
+                    "Хеш-таблица", "MyCollection (хеш-таблица)", "Завершить работу"};
                 Menu mainMenu = new(@"
         __          __       _       __           __      ______ 
        / /   ____ _/ /_     | |     / /___  _____/ /__   <  /__ \
@@ -554,7 +554,7 @@ namespace LabWork12
         {
             string[] options = { "Создать хеш-таблицу", "Очистить и заполнить структуру","Распечатать хеш-таблицу",
                 "Добавить элемент в хеш-таблицу", "Поиск и удаление элемента", "В главное меню"};
-            Menu dListMenuenu = new("Двунаправленный список", options);
+            Menu dListMenuenu = new("Хеш-таблица", options);
 
             return dListMenuenu.Run();
         }
@@ -685,7 +685,7 @@ namespace LabWork12
                 "Добавить элемент(-ы) в хеш-таблицу", "Изменение элемента по ключу",
                 "Удаление элементов по ключам", "Клонирование и копирование",
                 "В главное меню"};
-            Menu dListMenuenu = new("Двунаправленный список", options);
+            Menu dListMenuenu = new("Хеш-таблица (MyCollection)", options);
 
             return dListMenuenu.Run();
         }
@@ -844,7 +844,7 @@ namespace LabWork12
             Dialog.ColorText("КЛОН хеш-таблицы", "green");
             Console.WriteLine(clone);
 
-            Console.WriteLine("\nТеперь изменим элемент в первоначальной коллекции");
+            Console.WriteLine("\nТеперь изменим ПЕРВЫЙ элемент в первоначальной коллекции");
 
             Animal key = new Animal();
             foreach (var element in myCollection)

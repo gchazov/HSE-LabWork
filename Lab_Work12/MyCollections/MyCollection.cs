@@ -65,7 +65,8 @@ namespace MyCollections
                 HashPoint<T> current = Table[key.GetHashCode() % Length];
                 while (current != null)
                 {
-                    if (current.Key == key) return current.Value;
+                    if (current.Key.Equals(key)) return current.Value;
+                    current = current.Next;
                 }
                 throw new ArgumentNullException();
             }
@@ -103,7 +104,6 @@ namespace MyCollections
             if (Table[index] == null)
             { 
                 Table[index] = point;
-                Count++;
             }
             else
             {
@@ -115,7 +115,6 @@ namespace MyCollections
                     current = current.Next;
                 }
                 current.Next = point;
-                Count++;
             }
             return;
         }
@@ -136,7 +135,6 @@ namespace MyCollections
             {
                 point = Table[code];
                 Table[code] = Table[code].Next;
-                Count--;
                 return true;
             }
             while (point.Next != null && !point.Next.Key.Equals(item))
@@ -145,7 +143,6 @@ namespace MyCollections
             {
                 item = point.Next.Value;
                 point.Next = point.Next.Next;
-                Count--;
                 return true;
             }
             return false;
@@ -189,10 +186,11 @@ namespace MyCollections
         {
             if (arrayIndex < 0 || arrayIndex >= Length)
                 throw new ArgumentOutOfRangeException();
-            List<T> list = new List<T>(array);
+            List<T> list = new List<T>();
             for (int i = arrayIndex; i < Length; i++)
             {
                 HashPoint<T> current = Table[i];
+                if (current == null) continue;
                 while (current.Next != null)
                 {
                     list.Add((T)current.Value.Clone());
