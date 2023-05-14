@@ -12,10 +12,10 @@ namespace MyCollections
     public class HashPoint<T>
         where T : IInit<T>, ICloneable
     {
-        public T Key { get; private set; } //ключ элемента
-        public T Value { get; private set; } //информационное поле элемента
+        public T Key { get; internal set; } //ключ элемента
+        public T Value { get; internal set; } //информационное поле элемента
 
-        public HashPoint<T>? Next { get; set; } //следующий элемент (в цепочке)
+        public HashPoint<T>? Next { get; internal set; } //следующий элемент (в цепочке)
 
         public HashPoint(T? data = default) //конструктор с эл. по умолчанию
         {

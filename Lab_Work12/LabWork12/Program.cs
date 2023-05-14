@@ -19,9 +19,9 @@ namespace LabWork12
             DoublyLinkedList<Animal> dList = new();
             BinaryTree<Animal> tree = new();
             HTable<Animal> htable = new();
-
+            MyCollection<Animal> myCollection = new();
             //запуск выполнения всех методов подряд
-            Run(ref dList, ref tree, ref htable);
+            Run(ref dList, ref tree, ref htable, ref myCollection);
         }
 
 
@@ -50,7 +50,8 @@ namespace LabWork12
 
         static void Run(ref DoublyLinkedList<Animal> dList,
             ref BinaryTree<Animal> tree,
-            ref HTable<Animal> htable)
+            ref HTable<Animal> htable,
+            ref MyCollection<Animal> myCollection)
         {
             do
             {
@@ -161,6 +162,38 @@ namespace LabWork12
                         } while (hTableRun);
                         break;
                     case 3: //МАЙКОЛЛЕКШН
+                        var myCollectionRun = true;
+                        do
+                        {
+                            switch (MyCollectionMenu(ref myCollection))
+                            {
+                                case 0: //СОЗДАТЬ ХЕШ-ТАБЛИЦУ
+                                    MyCollectionMakeMenu(ref myCollection);
+                                    break;
+                                case 1: //ЗАПОЛНИТЬ ХЕШ-ТАБЛИЦУ
+                                    MyCollectionFill(ref myCollection);
+                                    break;
+                                case 2: //РАСПЕЧАТАТЬ ХЕШ-ТАБЛИЦУ
+                                    MyCollectionPrint(ref myCollection);
+                                    break;
+                                case 3: //ДОБАВИТЬ ЭЛЕМЕНТЫ В ХЕШ-ТАБЛИЦУ
+                                    MyCollectionAdd(ref myCollection);
+                                    break;
+                                case 4: //ЗАМЕНА ЭЛЕМЕНТА В ХЕШ-ТАБЛИЦЕ ПО КЛЮЧУ
+                                    MyCollectionChange(ref myCollection);
+                                    break;
+                                case 5: //УДАЛИТЬ ЭЛЕМЕНТЫ В ХЕШ-ТАБЛИЦЕ
+                                    MyCollectionDelete(ref myCollection);
+                                    break;
+                                case 6: //КЛОНИРОВАНИЕ И КОПИРОВАНИЕ
+                                    MyCollectionCopyClone(ref myCollection);
+                                    break;
+                                case 7: //В ГЛАВНОЕ МЕНЮ
+                                    myCollectionRun = false;
+                                    break;
+
+                            }
+                        } while (myCollectionRun);
                         break;
                     case 4: //ЗАВЕРШЕНИЕ РАБОТЫ
                         Dialog.PrintHeader(@"
@@ -176,9 +209,8 @@ namespace LabWork12
                         dList = new();
                         tree= new();
                         htable = new();
-                        HTable<Animal> hTable = new(1);
-                        hTable.Add(new Animal("1", 2, "3", 4));
-                        Console.WriteLine(hTable);
+                        myCollection = new();
+
                         Environment.Exit(0);
                         break;
                 }
@@ -520,7 +552,7 @@ namespace LabWork12
         //самое главное меню
         static int HTableMenu(ref HTable<Animal> htable)
         {
-            string[] options = { "Создать хеш-таблицу", "Заполнить структуру","Распечатать хеш-таблицу",
+            string[] options = { "Создать хеш-таблицу", "Очистить и заполнить структуру","Распечатать хеш-таблицу",
                 "Добавить элемент в хеш-таблицу", "Поиск и удаление элемента", "В главное меню"};
             Menu dListMenuenu = new("Двунаправленный список", options);
 
@@ -642,6 +674,203 @@ namespace LabWork12
 
             return dListMenuenu.Run();
         }
+        #endregion
+
+        #region MyCollection
+
+        //самое главное меню
+        static int MyCollectionMenu(ref MyCollection<Animal> myCollection)
+        {
+            string[] options = { "Создать хеш-таблицу", "Заполнить структуру","Распечатать хеш-таблицу",
+                "Добавить элемент(-ы) в хеш-таблицу", "Изменение элемента по ключу",
+                "Удаление элементов по ключам", "Клонирование и копирование",
+                "В главное меню"};
+            Menu dListMenuenu = new("Двунаправленный список", options);
+
+            return dListMenuenu.Run();
+        }
+
+        private static void MyCollectionMakeMenu(ref MyCollection<Animal> myCollection) //создание коллекции
+        {
+            Dialog.PrintHeader("Создание хеш-таблицы");
+            myCollection = new MyCollection<Animal>(Dialog.EnterNumber("Введите количество цепочек будущей хеш-таблицы:", 0, 100));
+            if (myCollection.Length == 0)
+            {
+                Dialog.ColorText("Пустая хеш-таблица успешно создана!", "green");
+            }
+            else
+            {
+                Dialog.ColorText($"\nХеш-таблица длиной в {myCollection.Length} цепочек успешно создана!\n" +
+                    $"Чтобы в ней появились элементы, используйте второй пункт предыдущего меню", "green");
+            }
+            Dialog.BackMessage();
+        }
+
+        private static void MyCollectionFill(ref MyCollection<Animal> myCollection) //заполнение коллекции
+        {
+            Dialog.PrintHeader("Очистка и заполнение коллекции");
+            myCollection.Clear();
+            Animal[] values = new Animal[Dialog.EnterNumber("Введите элементов в будущей коллекции:", 0, 500)];
+            if (values.Length == 0)
+            {
+                Dialog.ColorText($"Теперь в коллекции есть {myCollection.Length} пустых цепочек!", "green");
+                Dialog.BackMessage();
+                return;
+            }
+            for (int i  = 0; i < values.Length; i++)
+                values[i] = CollectionMethods.GetRandomAnimal();
+
+            myCollection.AddRange(values);
+
+            Dialog.ColorText($"Теперь коллекция состоит из {myCollection.Count} элементов!", "green");
+            Dialog.BackMessage();
+            return;
+        }
+
+        private static void MyCollectionPrint(ref MyCollection<Animal> myCollection)    //печать коллекции
+        {
+            Dialog.PrintHeader("Печать коллекции");
+            if (myCollection.Length == 0)
+            {
+                Dialog.ColorText($"В текущей хеш-таблице нет ни одной цепочки!", "green");
+                Dialog.BackMessage();
+                return;
+            }
+
+            Dialog.ColorText($"Текущая хеш-таблица состоит из следующих цепочек:", "green");
+            Console.WriteLine(myCollection);
+            Dialog.BackMessage();
+        }
+
+        private static void MyCollectionAdd(ref MyCollection<Animal> myCollection)  //добавление элементов
+        {
+            Dialog.PrintHeader("Добавление элементов в коллекцию");
+            Animal[] values = new Animal[Dialog.EnterNumber("Введите количество добавляемых элементов:", 0, 20)];
+            if (values.Length == 0)
+            {
+                Dialog.ColorText($"Коллекция осталось без изменений, ведь ничего не прибавилось к ней!", "green");
+                Dialog.BackMessage();
+                return;
+            }
+
+            if (myCollection.Length == 0)
+            {
+                myCollection = new MyCollection<Animal>(values.Length);
+            }
+            for (int i = 0; i < values.Length; i++)
+                values[i] = CollectionMethods.GetRandomAnimal();
+
+            myCollection.AddRange(values);
+
+            Dialog.ColorText($"Теперь количество элементов равно {myCollection.Count}", "green");
+            Dialog.BackMessage();
+            return;
+        }
+
+        private static void MyCollectionChange(ref MyCollection<Animal> myCollection)   //изменение элемента
+        {
+            Dialog.PrintHeader("Изменение элемента хеш-таблицы");
+            Console.WriteLine("Сначала введите ключ элемента, который хотите изменить");
+            Animal key = new Animal().Init();
+            if (!myCollection.Contains(key)) 
+            {
+                Dialog.ColorText($"В коллекции нет такого элемента!");
+                Dialog.BackMessage();
+                return;
+            }
+            Console.WriteLine("\nТеперь введите данные нового объекта");
+            Animal animal = new Animal().Init();
+
+            //чтобы элемент по правилам соответствовал цепочке
+            while (animal.GetHashCode()%myCollection.Length != key.GetHashCode() % myCollection.Length)
+                animal.Name += ")";
+            myCollection[key] = animal; 
+
+            Dialog.ColorText($"В коллекции обновлён элемент {key.GetHashCode()%myCollection.Length + 1} цепочки!\n" +
+                $"Распечатайте коллекцию и убедитесь в этом. Имя объекта могло измениться для соответствия структуре таблицы.",
+                "green");
+            Dialog.BackMessage();
+            return;
+        }
+
+        private static void MyCollectionDelete(ref MyCollection<Animal> myCollection)       //удаление элемента
+        {
+            Dialog.PrintHeader("Удаление элементов из коллекции");
+            if (myCollection.Count == 0)
+            {
+                Dialog.ColorText($"В пустой хеш-табоице удалять нечего!!!", "green");
+                Dialog.BackMessage();
+                return;
+            }
+
+            Animal[] values = new Animal[Dialog.EnterNumber("Введите количество удаляемых элементов:", 0, 20)];
+            if (values.Length == 0)
+            {
+                Dialog.ColorText($"Ничего удалено не было, всё на своих местах!", "green");
+                Dialog.BackMessage();
+                return;
+            }
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                Dialog.ColorText($"Инициализация {i + 1} объекта", "yellow");
+                values[i] = new Animal().Init();
+            }
+
+            myCollection.RemoveRange(values);
+
+            Dialog.ColorText($"Теперь длина коллекции равна {myCollection.Count}", "green");
+            Dialog.BackMessage();
+            return;
+        }
+
+        private static void MyCollectionCopyClone(ref MyCollection<Animal> myCollection)    //клонирование/копирование
+        {
+            Dialog.PrintHeader("Клонирование и копирование коллекции");
+            if (myCollection.Count == 0)
+            {
+                Dialog.ColorText($"В коллекции без элементов мало чего можно скопировать...\n" +
+                    $"Заполните её и возвращайтесь!", "green");
+                Dialog.BackMessage();
+                return;
+            }
+
+            MyCollection<Animal> copy = (MyCollection<Animal>)myCollection.ShallowCopy();
+            MyCollection<Animal> clone = (MyCollection<Animal>)myCollection.Clone();
+
+            Dialog.ColorText("КОПИЯ хеш-таблицы");
+            Console.WriteLine(copy);
+
+            Dialog.ColorText("КЛОН хеш-таблицы", "green");
+            Console.WriteLine(clone);
+
+            Console.WriteLine("\nТеперь изменим элемент в первоначальной коллекции");
+
+            Animal key = new Animal();
+            foreach (var element in myCollection)
+            {
+                if (element is Animal)
+                {
+                    key = (Animal)element.Clone();
+                    break;
+                }
+            }
+
+            Dialog.ColorText("Инициализация нового элемента", "yellow");
+            myCollection[key.GetBase()] = new Animal().Init();
+
+            Console.WriteLine("\nТеперь коллекции имеют следующий вид. Выводы напрашиваются сами :)\n");
+
+            Dialog.ColorText("КОПИЯ хеш-таблицы");
+            Console.WriteLine(copy);
+
+            Dialog.ColorText("КЛОН хеш-таблицы", "green");
+            Console.WriteLine(clone);
+
+            Dialog.BackMessage();
+            return;
+        }
+
         #endregion
     }
 }

@@ -1,13 +1,6 @@
 ﻿using AnimalLibrary;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyCollections
 {
@@ -17,7 +10,19 @@ namespace MyCollections
     {
         private HashPoint<T>[] Table { get; set; } //таблица с цепочками
 
-        public int Count { get; private set; } //СЧЁТЧИК ЭЛЕМЕНТОВ
+        public int Count    //СЧЁТЧИК ЭЛЕМЕНТОВ
+        {
+            get
+            {
+                int counter = 0;
+                foreach (var obj in this)
+                {
+                    if (obj != null) counter++;
+                }
+                return counter;
+            }
+            private set { }
+        }
 
         public int Length { get; private set; } //СЧЁТЧИК ЦЕПОЧЕК
 
@@ -50,6 +55,44 @@ namespace MyCollections
         }
 
         public bool IsReadOnly => false;    //не только для чтения
+
+        //индексатор
+        public T? this[T key]
+        {
+            get
+            { 
+                if (key == null) throw new ArgumentNullException();
+                HashPoint<T> current = Table[key.GetHashCode() % Length];
+                while (current != null)
+                {
+                    if (current.Key == key) return current.Value;
+                }
+                throw new ArgumentNullException();
+            }
+
+            set
+            {
+                if (key == null) throw new ArgumentNullException();
+                HashPoint<T> current = Table[key.GetHashCode() % Length];
+
+                if (current.Key.Equals(key))
+                {
+                    current.Key = value.GetBase();
+                    current.Value = value;
+                    return;
+                }
+
+                while (current.Next != null)
+                {
+                    if (current.Next.Key.Equals(key))
+                    {
+                        current.Next.Value = value;
+                        current.Next.Key = value.GetBase();
+                    }
+                    current = current.Next;
+                }
+            }
+        }
 
 
         public void Add(T item)     //добавление элемента в хеш-таблицу
@@ -116,7 +159,10 @@ namespace MyCollections
 
         public void Clear()     //очистка коллекции
         {
-            _ = new MyCollection<T>();
+            for (int i = 0; i < Length; i++)
+            {
+                Table[i] = null;
+            }
         }
 
         public bool Contains(T item)    //проверка на содержание элемента в коллекции
@@ -143,26 +189,36 @@ namespace MyCollections
         {
             if (arrayIndex < 0 || arrayIndex >= Length)
                 throw new ArgumentOutOfRangeException();
+            List<T> list = new List<T>(array);
             for (int i = arrayIndex; i < Length; i++)
             {
                 HashPoint<T> current = Table[i];
                 while (current.Next != null)
                 {
-                    array.Append((T)current.Value.Clone());
+                    list.Add((T)current.Value.Clone());
+                    current = current.Next;
+                }
+            }
+            array = list.ToArray();
+        }
+
+
+        public IEnumerator<T> GetEnumerator()   //нумератор
+        {
+            for (int i = 0; i < Length; i++)
+            {
+                var current = Table[i];
+                while (current != null)
+                {
+                    yield return current.Value;
                     current = current.Next;
                 }
             }
         }
 
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(); //зачем нам необобщённый, если есть обобщёный?
         }
 
         public object Clone()   //глубокое клонирование
@@ -185,14 +241,30 @@ namespace MyCollections
             MyCollection<T> copy = new MyCollection<T>(Length);
             for (int i = 0; i < Length; ++i)
             {
-                HashPoint<T> current = Table[i];
-                while (current != null)
-                {
-                    copy.Add(current.Value);   //здесь уже не клонируем по элементам
-                    current = current.Next;
-                }
+                copy.Table[i] = Table[i];
             }
             return copy;
         }
-    }
+
+        public override string ToString() //печать таблицы
+        {
+            string result = "";
+            for (int i = 0; i < Length; ++i)
+            {
+                if (Table[i] == null) result += "\nЦепочка " + (i + 1).ToString() + " : Нет данных";
+                else
+                {
+                    result += "\nЦепочка " + (i + 1).ToString() + ":";
+                    HashPoint<T> point = Table[i];
+                    while (point != null)
+                    {
+                        result += "\n\t" + point.ToString();
+                        point = point.Next;
+                    }
+                    result += "\n";
+                }
+            }
+            return result;
+        }
+    }  
 }
