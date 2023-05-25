@@ -179,16 +179,19 @@ namespace LabWork12
                                 case 3: //ДОБАВИТЬ ЭЛЕМЕНТЫ В ХЕШ-ТАБЛИЦУ
                                     MyCollectionAdd(ref myCollection);
                                     break;
-                                case 4: //ЗАМЕНА ЭЛЕМЕНТА В ХЕШ-ТАБЛИЦЕ ПО КЛЮЧУ
+                                case 4://НАЙТИ ЭЛЕМЕНТ В ХЕШ-ТАБЛИЦЕ
+                                    MyCollectionAdd(ref myCollection);
+                                    break;
+                                case 5: //ЗАМЕНА ЭЛЕМЕНТА В ХЕШ-ТАБЛИЦЕ ПО КЛЮЧУ
                                     MyCollectionChange(ref myCollection);
                                     break;
-                                case 5: //УДАЛИТЬ ЭЛЕМЕНТЫ В ХЕШ-ТАБЛИЦЕ
+                                case 6: //УДАЛИТЬ ЭЛЕМЕНТЫ В ХЕШ-ТАБЛИЦЕ
                                     MyCollectionDelete(ref myCollection);
                                     break;
-                                case 6: //КЛОНИРОВАНИЕ И КОПИРОВАНИЕ
+                                case 7: //КЛОНИРОВАНИЕ И КОПИРОВАНИЕ
                                     MyCollectionCopyClone(ref myCollection);
                                     break;
-                                case 7: //В ГЛАВНОЕ МЕНЮ
+                                case 8: //В ГЛАВНОЕ МЕНЮ
                                     myCollectionRun = false;
                                     break;
 
@@ -675,14 +678,14 @@ namespace LabWork12
             return dListMenuenu.Run();
         }
         #endregion
-
+        
         #region MyCollection
 
         //самое главное меню
         static int MyCollectionMenu(ref MyCollection<Animal> myCollection)
         {
             string[] options = { "Создать хеш-таблицу", "Заполнить структуру","Распечатать хеш-таблицу",
-                "Добавить элемент(-ы) в хеш-таблицу", "Изменение элемента по ключу",
+                "Добавить элемент(-ы) в хеш-таблицу", "Поиск элемента в хеш-таблице","Изменение элемента по ключу",
                 "Удаление элементов по ключам", "Клонирование и копирование",
                 "В главное меню"};
             Menu dListMenuenu = new("Хеш-таблица (MyCollection)", options);
@@ -767,9 +770,30 @@ namespace LabWork12
             return;
         }
 
-        private static void MyCollectionChange(ref MyCollection<Animal> myCollection)   //изменение элемента
+        private static void MyCollectionContains(ref MyCollection<Animal> myCollection)   //изменение элемента
+        {
+            Dialog.PrintHeader("Поиск элемента в хеш-таблицы");
+
+            Console.WriteLine("Введите ключ искомого элемента:");
+            Animal key = new Animal().Init();
+            if (!myCollection.Contains(key))
+            {
+                Dialog.ColorText($"В коллекции такого элемента нет!");
+            }
+            else
+            {
+                Dialog.ColorText($"Элемент присутствует в коллекции!");
+            }
+            Dialog.BackMessage();
+            return;
+        }
+
+            private static void MyCollectionChange(ref MyCollection<Animal> myCollection)   //изменение элемента
         {
             Dialog.PrintHeader("Изменение элемента хеш-таблицы");
+
+            Console.WriteLine("Хеш-таблица имеет следующий вид:");
+            Console.WriteLine(myCollection + "\n");
             Console.WriteLine("Сначала введите ключ элемента, который хотите изменить");
             Animal key = new Animal().Init();
             if (!myCollection.Contains(key)) 
@@ -778,6 +802,7 @@ namespace LabWork12
                 Dialog.BackMessage();
                 return;
             }
+
             Console.WriteLine("\nТеперь введите данные нового объекта");
             Animal animal = new Animal().Init();
 
@@ -802,7 +827,8 @@ namespace LabWork12
                 Dialog.BackMessage();
                 return;
             }
-
+            Console.WriteLine("Хеш-таблица имеет следующий вид:");
+            Console.WriteLine(myCollection+"\n");
             Animal[] values = new Animal[Dialog.EnterNumber("Введите количество удаляемых элементов:", 0, 20)];
             if (values.Length == 0)
             {

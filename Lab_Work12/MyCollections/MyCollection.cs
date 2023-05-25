@@ -217,6 +217,7 @@ namespace MyCollections
         IEnumerator IEnumerable.GetEnumerator()
         {
             throw new NotImplementedException(); //зачем нам необобщённый, если есть обобщёный?
+            //тем более, он приватный
         }
 
         public object Clone()   //глубокое клонирование
