@@ -96,7 +96,7 @@ namespace AnimalLibrary
             return new Mammal(Name, Age, Habitat, IsWoolen, id.number);
         }
 
-        public new Animal GetBase()
+        public Animal GetBase()
         {
             return new Animal(Name, Age, Habitat, id.number);
         }

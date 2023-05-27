@@ -18,6 +18,8 @@ namespace MyCollections
             public string? ChangeType { get; set; } //тип изменений (напр. удаление, добавление или изменение)
             public T? Data { get; set; }    //объект коллекции, с которым связано событие
 
+            public DateTime? Date { get; set; } = DateTime.Now;
+
             //конструктор
             public JournalEntry(object source, CollectionHandlerEventArgs<T> args)
             {
@@ -29,8 +31,9 @@ namespace MyCollections
 
         public string? JournalName { get; set; }
         public List<JournalEntry> journalEntries = new();
+        public bool IsEmpty { get => journalEntries.Count == 0; }
 
-        public Journal(string? journalName)
+        public Journal(string? journalName = "")
         {
             JournalName = journalName;
             journalEntries = new();
@@ -50,7 +53,7 @@ namespace MyCollections
         {
             foreach (var entry in journalEntries)
             {
-                Console.WriteLine($"Журнал: {JournalName} Коллекция: {entry.CollectionName} Действие: {entry.ChangeType}" );
+                Console.WriteLine($"Журнал: {JournalName}\nКоллекция: {entry.CollectionName}\nДействие: {entry.ChangeType}\nВремя: {entry.Date}" );
                 Console.WriteLine("\tОбъект: "+entry.Data);
             }
         }
@@ -60,7 +63,7 @@ namespace MyCollections
             string result = "";
             foreach (var entry in journalEntries)
             {
-                result += $"Журнал: {JournalName} Коллекция: {entry.CollectionName} Действие: {entry.ChangeType}\n";
+                result += $"Журнал: {JournalName}\nКоллекция: {entry.CollectionName}\nДействие: {entry.ChangeType}\nВремя: {entry.Date}\n";
                 result += "\tОбъект: " + entry.Data+"\n";
             }
             return result;

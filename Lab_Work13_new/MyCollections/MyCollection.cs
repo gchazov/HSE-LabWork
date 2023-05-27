@@ -125,7 +125,6 @@ namespace MyCollections
                 Add(item);
         }
 
-
         public virtual bool Remove(T item)  //добавление элемента
         {
             HashPoint<T> point = new HashPoint<T>(item);

@@ -108,7 +108,7 @@ namespace AnimalLibrary
             return $"Птица: {Name}; Возраст: {Age}; Ареал обитания: {Habitat}; Умение летать: {FlyAbility}; ID в зоопарке: {id}";
         }
 
-        public new Animal GetBase()
+        public Animal GetBase()
         {
             return new Animal(Name, Age, Habitat, id.number);
         }

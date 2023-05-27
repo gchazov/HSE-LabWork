@@ -180,7 +180,7 @@ namespace LabWork12
                                     MyCollectionAdd(ref myCollection);
                                     break;
                                 case 4://НАЙТИ ЭЛЕМЕНТ В ХЕШ-ТАБЛИЦЕ
-                                    MyCollectionAdd(ref myCollection);
+                                    MyCollectionContains(ref myCollection);
                                     break;
                                 case 5: //ЗАМЕНА ЭЛЕМЕНТА В ХЕШ-ТАБЛИЦЕ ПО КЛЮЧУ
                                     MyCollectionChange(ref myCollection);
@@ -712,6 +712,12 @@ namespace LabWork12
         private static void MyCollectionFill(ref MyCollection<Animal> myCollection) //заполнение коллекции
         {
             Dialog.PrintHeader("Очистка и заполнение коллекции");
+            if (myCollection.Length == 0)
+            {
+                Dialog.ColorText("Нельзя заполнить хеш-таблицу без цепочек!");
+                Dialog.BackMessage();
+                return;
+            }
             myCollection.Clear();
             Animal[] values = new Animal[Dialog.EnterNumber("Введите элементов в будущей коллекции:", 0, 500)];
             if (values.Length == 0)
@@ -772,8 +778,14 @@ namespace LabWork12
 
         private static void MyCollectionContains(ref MyCollection<Animal> myCollection)   //изменение элемента
         {
-            Dialog.PrintHeader("Поиск элемента в хеш-таблицы");
+            Dialog.PrintHeader("Поиск элемента в хеш-таблице");
 
+            if (myCollection.Length == 0)
+            {
+                Dialog.ColorText("Нельзя что-то найти в хеш-таблице без цепочек!");
+                Dialog.BackMessage();
+                return;
+            }
             Console.WriteLine("Введите ключ искомого элемента:");
             Animal key = new Animal().Init();
             if (!myCollection.Contains(key))
@@ -788,10 +800,16 @@ namespace LabWork12
             return;
         }
 
-            private static void MyCollectionChange(ref MyCollection<Animal> myCollection)   //изменение элемента
+        static void MyCollectionChange(ref MyCollection<Animal> myCollection)   //изменение элемента
         {
             Dialog.PrintHeader("Изменение элемента хеш-таблицы");
 
+            if (myCollection.Count == 0)
+            {
+                Dialog.ColorText("Нельзя изменить что-то в пустой коллекции!");
+                Dialog.BackMessage();
+                return;
+            }
             Console.WriteLine("Хеш-таблица имеет следующий вид:");
             Console.WriteLine(myCollection + "\n");
             Console.WriteLine("Сначала введите ключ элемента, который хотите изменить");

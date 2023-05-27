@@ -19,7 +19,7 @@ namespace MyCollections
         {
             CollectionName = collectionName;
             ChangeType = changeType;
-            Object = (T)@object.Clone();
+            Object = @object;
         }
     }
 }

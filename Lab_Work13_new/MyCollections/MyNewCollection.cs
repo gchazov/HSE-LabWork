@@ -17,12 +17,19 @@ namespace MyCollections
         public event CollectionHandler? CollectionCountChanged; //событие при добавления/удаления элемента
         public event CollectionHandler? CollectionReferenceChanged; //событие при изменении ссылки
 
-        public string CollectionName { get; set; } = "NoNameCollection";    //название кроллекции
+        public string CollectionName { get; set; } = "NoNameCollection";   //название кроллекции
         public MyNewCollection(string name) //конструктор для создания нвоой коллекции
         {
             CollectionName = name;
             Table = Array.Empty<HashPoint<T>>();
         }
+
+        public MyNewCollection(int capacity):base(capacity)
+        { }
+
+        public MyNewCollection():base() { }
+
+
 
         //обработчик события CollectionCountChanged
         public virtual void OnCollectionCountChanged(object source, CollectionHandlerEventArgs<T> args)
@@ -41,6 +48,16 @@ namespace MyCollections
         {
             OnCollectionCountChanged(this, new CollectionHandlerEventArgs<T>(CollectionName, "Добавление", item));
             base.Add(item);
+        }
+
+        public void AddDefault()    //добавление псевдослучайного объекта в коллекцию
+        {
+            var randomObject = new T().RandomInit();
+            if (!this.Contains(randomObject))
+            {
+                OnCollectionCountChanged(this, new CollectionHandlerEventArgs<T>(CollectionName, "Добавление", randomObject));
+                base.Add(randomObject);
+            }
         }
 
         public override bool Remove(T item)  //удаление элемента и вызов обработчика события

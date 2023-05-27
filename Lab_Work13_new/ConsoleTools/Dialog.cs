@@ -53,7 +53,7 @@ namespace ConsoleTools
         }
         
         //ввод строки
-        public static string? EnterString(string welcomeString, bool notEmpty)
+        public static string EnterString(string welcomeString, bool notEmpty)
         {
             Console.WriteLine(welcomeString);
             string str = "";
