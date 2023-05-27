@@ -18,20 +18,9 @@ namespace LabWork13
             //инициализация по коллекций и журналов по умолчанию
             MyNewCollection<Animal> firstCollection = new("Коллекция 1");
             MyNewCollection<Animal> secondCollection = new("Коллекция 2");
+
             Journal<Animal> firstJournal = new("Журнал 1");
             Journal<Animal> secondJournal = new("Журнал 2");
-
-            //подписка первого журнала на события о изм. кол-ва элементов ПЕРВОЙ коллекции
-            firstCollection.CollectionCountChanged += new (firstJournal.CollectionCountChanged);
-
-            //подписка первого журнала на события о изм. элемента ПЕРВОЙ коллекции
-            firstCollection.CollectionReferenceChanged += new (firstJournal.CollectionReferenceChanged);
-
-            //подписка второго журнала на события о изм. кол-ва элементов ПЕРВОЙ коллекции
-            firstCollection.CollectionReferenceChanged += new (secondJournal.CollectionReferenceChanged);
-
-            //подписка второго журнала на события о изм. элемента ВТОРОЙ коллекции
-            secondCollection.CollectionReferenceChanged += new(secondJournal.CollectionReferenceChanged);
 
             Run(ref firstCollection, ref secondCollection,
                 ref firstJournal, ref secondJournal);
@@ -53,10 +42,10 @@ namespace LabWork13
                             switch(CollectionChoice(ref firstCollection, ref secondCollection))
                             {
                                 case 0:
-                                    MakeCollection(ref firstCollection);
+                                    MakeFirstCollection(ref firstCollection, ref firstJournal, ref secondJournal);
                                     break;
                                 case 1:
-                                    MakeCollection(ref secondCollection);
+                                    MakeSecondCollection(ref secondCollection, ref secondJournal);
                                     break;
                                 case 2:
                                     makeMenuRun = false;
@@ -217,7 +206,7 @@ namespace LabWork13
 
         static int MainMenu()
         {
-            string[] options = { "Создание цеопчек хеш-таблицы", "Заполнение коллекции", "Печать коллекции",
+            string[] options = { "Создание цепочек хеш-таблицы", "Заполнение коллекции", "Печать коллекции",
             "Добавление случайного элемента", "Удаление элемента", "Изменение элемента хеш-таблицы", "Переименовать коллекцию",
             "Переименовать журнал", "Просмотр журналов", "Завершение работы"};
             Menu mainMenu = new(@"
@@ -245,12 +234,44 @@ namespace LabWork13
             return collChoiceMenu.Run();
         }
 
-        static void MakeCollection(ref MyNewCollection<Animal> collection) //создание коллекции
+        static void MakeFirstCollection(ref MyNewCollection<Animal> collection,
+            ref Journal<Animal> firstJournal, ref Journal<Animal> secondJournal) //создание коллекции
         {
             Dialog.PrintHeader($"Создание цепочек {collection.CollectionName}");
             string name = collection.CollectionName;
             collection = new MyNewCollection<Animal>(Dialog.EnterNumber("Введите количество цепочек будущей хеш-таблицы:", 0, 100));
             collection.CollectionName = name;
+            //подписка первого журнала на события о изм. кол-ва элементов ПЕРВОЙ коллекции
+            collection.CollectionCountChanged += new(firstJournal.CollectionCountChanged);
+
+            //подписка первого журнала на события о изм. элемента ПЕРВОЙ коллекции
+            collection.CollectionReferenceChanged += new(firstJournal.CollectionReferenceChanged);
+
+            //подписка второго журнала на события о изм. кол-ва элементов ПЕРВОЙ коллекции
+            collection.CollectionReferenceChanged += new(secondJournal.CollectionReferenceChanged);
+
+            if (collection.Length == 0)
+            {
+                Dialog.ColorText("Пустая хеш-таблица успешно создана!", "green");
+            }
+            else
+            {
+                Dialog.ColorText($"\nХеш-таблица длиной в {collection.Length} цепочек успешно создана!\n" +
+                    $"Чтобы в ней появились элементы, используйте второй пункт предыдущего меню", "green");
+            }
+            Dialog.BackMessage();
+        }
+
+        static void MakeSecondCollection(ref MyNewCollection<Animal> collection,
+            ref Journal<Animal> secondJournal) //создание коллекции
+        {
+            Dialog.PrintHeader($"Создание цепочек {collection.CollectionName}");
+            string name = collection.CollectionName;
+            collection = new MyNewCollection<Animal>(Dialog.EnterNumber("Введите количество цепочек будущей хеш-таблицы:", 0, 100));
+            collection.CollectionName = name;
+            //подписка второго журнала на события о изм. элемента ВТОРОЙ коллекции
+            collection.CollectionReferenceChanged += new(secondJournal.CollectionReferenceChanged);
+
             if (collection.Length == 0)
             {
                 Dialog.ColorText("Пустая хеш-таблица успешно создана!", "green");

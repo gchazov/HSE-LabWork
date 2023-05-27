@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -108,6 +109,17 @@ namespace AnimalLibrary
         public Animal GetBase()
         {
             return new Animal(Name, Age, Habitat, id.number);
+        }
+
+        public override int GetHashCode()
+        {
+            //для словаря (сортированного) and ht
+            int result = 0;
+            foreach (char c in this.GetBase().ToString())
+            {
+                result += (int)c;
+            }
+            return result;
         }
     }
 }

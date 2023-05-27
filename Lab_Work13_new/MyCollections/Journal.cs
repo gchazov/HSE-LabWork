@@ -17,15 +17,15 @@ namespace MyCollections
             public string? CollectionName { get; set; } //название изменяемой коллекции
             public string? ChangeType { get; set; } //тип изменений (напр. удаление, добавление или изменение)
             public T? Data { get; set; }    //объект коллекции, с которым связано событие
-
-            public DateTime? Date { get; set; } = DateTime.Now;
+            
+            public DateTime? Date { get; set; } = DateTime.Now; //точное время выполнения события
 
             //конструктор
-            public JournalEntry(object source, CollectionHandlerEventArgs<T> args)
+            public JournalEntry(string collectionName, string changeType, object? obj)
             {
-                CollectionName = ((MyNewCollection<T>)source).CollectionName;
-                ChangeType = args.ChangeType;
-                Data = args.Object;
+                CollectionName = collectionName;
+                ChangeType = changeType;
+                Data = (T)obj;
             }
         }
 
@@ -41,12 +41,12 @@ namespace MyCollections
 
         public void CollectionCountChanged(object source, CollectionHandlerEventArgs<T> args)
         {
-            journalEntries.Add(new JournalEntry(source, args));
+            journalEntries.Add(new JournalEntry(args.CollectionName, args.ChangeType, args.Object));
         }
 
         public void CollectionReferenceChanged(object source, CollectionHandlerEventArgs<T> args)
         {
-            journalEntries.Add(new JournalEntry(source, args));
+            journalEntries.Add(new JournalEntry(args.CollectionName, args.ChangeType, args.Object));
         }
 
         public void ShowJournal()

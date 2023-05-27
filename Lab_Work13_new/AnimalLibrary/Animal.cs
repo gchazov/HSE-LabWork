@@ -144,7 +144,7 @@ namespace AnimalLibrary
         {
             //для словаря (сортированного) and ht
             int result = 0;
-            foreach (char c in this.ToString())
+            foreach (char c in this.GetBase().ToString())
             {
                 result += (int)c;
             }

@@ -29,7 +29,11 @@ namespace MyCollections
 
         public MyNewCollection():base() { }
 
-
+        public MyNewCollection(int capacity, string name)
+        {
+            CollectionName = name;
+            Table = new HashPoint<T>[capacity];
+        }
 
         //обработчик события CollectionCountChanged
         public virtual void OnCollectionCountChanged(object source, CollectionHandlerEventArgs<T> args)
@@ -68,11 +72,41 @@ namespace MyCollections
 
         public override T? this[T key]
         {
-            get => base[key];
+            get
+            {
+                if (key == null) throw new ArgumentNullException();
+                HashPoint<T> current = Table[key.GetHashCode() % Length];
+                while (current != null)
+                {
+                    if (current.Key.Equals(key)) return current.Value;
+                    current = current.Next;
+                }
+                throw new ArgumentNullException();
+            }
             set
             {
-                base[key] = value;
-                OnCollectionReferenceChanged(this, new CollectionHandlerEventArgs<T>(CollectionName, "Изменение элемента", base[key]));
+                if (key == null) throw new ArgumentNullException();
+                HashPoint<T> current = Table[key.GetHashCode() % Length];
+
+                if (current.Key.Equals(key))
+                {
+                    OnCollectionReferenceChanged(this, new CollectionHandlerEventArgs<T>(CollectionName, "Изменение элемента", current.Value));
+                    current.Key = value.GetBase();
+                    current.Value = value;
+                    return;
+                }
+
+                while (current.Next != null)
+                {
+                    if (current.Next.Key.Equals(key))
+                    {
+                        OnCollectionReferenceChanged(this, new CollectionHandlerEventArgs<T>(CollectionName, "Изменение элемента", current.Next.Value));
+                        current.Next.Value = value;
+                        current.Next.Key = value.GetBase();
+                        return;
+                    }
+                    current = current.Next;
+                }
             }
         }
     }
