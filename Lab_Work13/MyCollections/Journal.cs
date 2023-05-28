@@ -33,7 +33,7 @@ namespace MyCollections
         public List<JournalEntry> journalEntries = new();
         public bool IsEmpty { get => journalEntries.Count == 0; }
 
-        public Journal(string? journalName = "")
+        public Journal(string? journalName = "NoNameJournal")
         {
             JournalName = journalName;
             journalEntries = new();
@@ -54,7 +54,7 @@ namespace MyCollections
             foreach (var entry in journalEntries)
             {
                 Console.WriteLine($"Журнал: {JournalName}\nКоллекция: {entry.CollectionName}\nДействие: {entry.ChangeType}\nВремя: {entry.Date}" );
-                Console.WriteLine("\tОбъект: "+entry.Data);
+                Console.WriteLine("\tОбъект: "+entry.Data+"\n");
             }
         }
 
@@ -64,7 +64,7 @@ namespace MyCollections
             foreach (var entry in journalEntries)
             {
                 result += $"Журнал: {JournalName}\nКоллекция: {entry.CollectionName}\nДействие: {entry.ChangeType}\nВремя: {entry.Date}\n";
-                result += "\tОбъект: " + entry.Data+"\n";
+                result += "\tОбъект: " + entry.Data+"\n\n";
             }
             return result;
         }

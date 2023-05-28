@@ -2,9 +2,6 @@
 using ConsoleTools;
 using MyCollections;
 using Functionality;
-using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
-using System.Data;
 
 //ЛАБОРАТОРНАЯ РАБОТА 12 ВАРИАНТ 4
 
@@ -241,6 +238,7 @@ namespace LabWork13
             string name = collection.CollectionName;
             collection = new MyNewCollection<Animal>(Dialog.EnterNumber("Введите количество цепочек будущей хеш-таблицы:", 0, 100));
             collection.CollectionName = name;
+
             //подписка первого журнала на события о изм. кол-ва элементов ПЕРВОЙ коллекции
             collection.CollectionCountChanged += new(firstJournal.CollectionCountChanged);
 
@@ -269,6 +267,7 @@ namespace LabWork13
             string name = collection.CollectionName;
             collection = new MyNewCollection<Animal>(Dialog.EnterNumber("Введите количество цепочек будущей хеш-таблицы:", 0, 100));
             collection.CollectionName = name;
+
             //подписка второго журнала на события о изм. элемента ВТОРОЙ коллекции
             collection.CollectionReferenceChanged += new(secondJournal.CollectionReferenceChanged);
 
@@ -351,7 +350,7 @@ namespace LabWork13
             Dialog.PrintHeader($"Удаление элемента из {collection.CollectionName}");
             if (collection.Count == 0)
             {
-                Dialog.ColorText($"В пустой хеш-табоице удалять нечего!!!", "green");
+                Dialog.ColorText($"В пустой хеш-таблице удалять нечего!!!", "green");
                 Dialog.BackMessage();
                 return;
             }
@@ -361,13 +360,13 @@ namespace LabWork13
             var key = new Animal().Init();
             if (!collection.Contains(key)) 
             {
-                Console.WriteLine("Такого элемента в коллекции нет!");
+                Dialog.ColorText("\nТакого элемента в коллекции нет!");
                 Dialog.BackMessage();
                 return;
             }
             collection.Remove(key);
 
-            Dialog.ColorText($"Теперь длина коллекции равна {collection.Count}", "green");
+            Dialog.ColorText($"Элемент удалён. Теперь длина коллекции равна {collection.Count}", "green");
             Dialog.BackMessage();
             return;
         }

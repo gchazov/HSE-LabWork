@@ -90,9 +90,10 @@ namespace MyCollections
 
                 if (current.Key.Equals(key))
                 {
-                    OnCollectionReferenceChanged(this, new CollectionHandlerEventArgs<T>(CollectionName, "Изменение элемента", current.Value));
                     current.Key = value.GetBase();
                     current.Value = value;
+                    OnCollectionReferenceChanged(this, new CollectionHandlerEventArgs<T>(CollectionName, "Изменение элемента", current.Value));
+
                     return;
                 }
 
@@ -100,13 +101,15 @@ namespace MyCollections
                 {
                     if (current.Next.Key.Equals(key))
                     {
-                        OnCollectionReferenceChanged(this, new CollectionHandlerEventArgs<T>(CollectionName, "Изменение элемента", current.Next.Value));
                         current.Next.Value = value;
                         current.Next.Key = value.GetBase();
+                        OnCollectionReferenceChanged(this, new CollectionHandlerEventArgs<T>(CollectionName, "Изменение элемента", current.Value));
+
                         return;
                     }
                     current = current.Next;
                 }
+                throw new ArgumentNullException();
             }
         }
     }
