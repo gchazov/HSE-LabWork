@@ -3,7 +3,6 @@ using ConsoleTools;
 using MyCollections;
 using Functionality;
 
-//ЛАБОРАТОРНАЯ РАБОТА 12 ВАРИАНТ 4
 
 namespace LabWork13
 {
