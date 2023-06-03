@@ -14,7 +14,7 @@ namespace MyCollections
     {
         public delegate void CollectionHandler(object source, CollectionHandlerEventArgs<T> args);
 
-        public event CollectionHandler? CollectionCountChanged; //событие при добавления/удаления элемента
+        public event CollectionHandler? CollectionCountChanged; //событие для добавления/удаления элемента
         public event CollectionHandler? CollectionReferenceChanged; //событие при изменении ссылки
 
         public string CollectionName { get; set; } = "NoNameCollection";   //название кроллекции
@@ -25,7 +25,7 @@ namespace MyCollections
         }
 
         public MyNewCollection(int capacity):base(capacity)
-        { }
+        { } //конструктор, создающий пустую коллекцию с n-ым кол-вом цепочек
 
         public MyNewCollection():base() { }
 

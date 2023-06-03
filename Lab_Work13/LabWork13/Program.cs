@@ -239,13 +239,13 @@ namespace LabWork13
             collection.CollectionName = name;
 
             //подписка первого журнала на события о изм. кол-ва элементов ПЕРВОЙ коллекции
-            collection.CollectionCountChanged += new(firstJournal.CollectionCountChanged);
+            collection.CollectionCountChanged += firstJournal.CollectionCountChanged;
 
             //подписка первого журнала на события о изм. элемента ПЕРВОЙ коллекции
-            collection.CollectionReferenceChanged += new(firstJournal.CollectionReferenceChanged);
+            collection.CollectionReferenceChanged += firstJournal.CollectionReferenceChanged;
 
             //подписка второго журнала на события о изм. кол-ва элементов ПЕРВОЙ коллекции
-            collection.CollectionReferenceChanged += new(secondJournal.CollectionReferenceChanged);
+            collection.CollectionReferenceChanged += secondJournal.CollectionReferenceChanged;
 
             if (collection.Length == 0)
             {
@@ -268,7 +268,7 @@ namespace LabWork13
             collection.CollectionName = name;
 
             //подписка второго журнала на события о изм. элемента ВТОРОЙ коллекции
-            collection.CollectionReferenceChanged += new(secondJournal.CollectionReferenceChanged);
+            collection.CollectionReferenceChanged += secondJournal.CollectionReferenceChanged;
 
             if (collection.Length == 0)
             {
@@ -349,7 +349,7 @@ namespace LabWork13
             Dialog.PrintHeader($"Удаление элемента из {collection.CollectionName}");
             if (collection.Count == 0)
             {
-                Dialog.ColorText($"В пустой хеш-таблице удалять нечего!!!", "green");
+                Dialog.ColorText($"В пустой хеш-таблице удалять нечего!!!");
                 Dialog.BackMessage();
                 return;
             }

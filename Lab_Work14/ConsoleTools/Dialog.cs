@@ -175,6 +175,13 @@ namespace ConsoleTools
             Console.Clear();
         }
 
+        //сообщение о продолжении действия
+        public static void ForwardMessage()
+        {
+            Console.WriteLine("\nНажмите Enter для прололжения...");
+            Console.ReadLine();
+        }
+
 
 
     }

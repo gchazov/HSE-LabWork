@@ -39,11 +39,13 @@ namespace MyCollections
             journalEntries = new();
         }
 
+        //обработчик события для изменения кол-ва элементов
         public void CollectionCountChanged(object source, CollectionHandlerEventArgs<T> args)
         {
             journalEntries.Add(new JournalEntry(args.CollectionName, args.ChangeType, args.Object));
         }
 
+        //обработчик события для изменения ссылки элемента
         public void CollectionReferenceChanged(object source, CollectionHandlerEventArgs<T> args)
         {
             journalEntries.Add(new JournalEntry(args.CollectionName, args.ChangeType, args.Object));
