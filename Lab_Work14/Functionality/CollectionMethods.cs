@@ -2,12 +2,23 @@
 using AnimalLibrary;
 using System.Drawing;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Functionality
 {
     //методы для паботы с двунаправленным списком
-    public class CollectionMethods
+    public static class CollectionMethods
     {
+        //для удобства вывода листа
+        public static void Print(this List<Animal> animals)
+        {
+            foreach (var animal in animals)
+            {
+                if (animal != null)
+                    Console.WriteLine(animal);
+            }
+        }
+
         //создание двунаправленного списка
         public static void MakeRandomList(ref DoublyLinkedList<Animal> dList, int size)
         {
