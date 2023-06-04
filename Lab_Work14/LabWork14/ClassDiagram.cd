@@ -1,31 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="MyCollections.BinaryTree&lt;T&gt;">
-    <Position X="8.5" Y="1" Width="1.5" />
+    <Position X="11" Y="2" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="MyCollections.CollectionHandlerEventArgs&lt;T&gt;">
-    <Position X="10.5" Y="4" Width="1.5" />
+    <Position X="13" Y="4.75" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="MyCollections.DoublyLinkedList&lt;T&gt;">
-    <Position X="12.5" Y="0.5" Width="1.5" />
+    <Position X="15" Y="0.5" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="MyCollections.DuplexItem&lt;T&gt;">
-    <Position X="12.5" Y="4.5" Width="1.5" />
+    <Position X="15" Y="4.75" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="MyCollections.HashPoint&lt;T&gt;">
-    <Position X="14.5" Y="3.75" Width="1.5" />
+    <Position X="17" Y="4.75" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="MyCollections.HTable&lt;T&gt;">
-    <Position X="14.5" Y="1" Width="1.5" />
+    <Position X="17" Y="1.75" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="MyCollections.Journal&lt;T&gt;">
-    <Position X="10.5" Y="0.5" Width="1.5" />
+    <Position X="13" Y="1.25" Width="1.5" />
     <NestedTypes>
       <Class Name="MyCollections.Journal&lt;T&gt;.JournalEntry" Collapsed="true">
         <TypeIdentifier />
@@ -34,16 +34,20 @@
     <TypeIdentifier />
   </Class>
   <Class Name="MyCollections.MyCollection&lt;T&gt;">
-    <Position X="4.25" Y="0.75" Width="1.5" />
+    <Position X="6.5" Y="2" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="MyCollections.MyNewCollection&lt;T&gt;">
-    <Position X="6.5" Y="1.25" Width="1.5" />
+    <Position X="8.5" Y="2.25" Width="1.5" />
     <NestedTypes>
       <Class Name="MyCollections.MyNewCollection&lt;T&gt;.CollectionHandler" Collapsed="true">
         <TypeIdentifier />
       </Class>
     </NestedTypes>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Functionality.ExtensionsAndRequests">
+    <Position X="4.25" Y="2" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Font Name="Segoe UI" Size="9" />
