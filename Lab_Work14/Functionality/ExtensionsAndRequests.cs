@@ -4,7 +4,6 @@ using System.IO.Pipes;
 
 namespace Functionality
 {
-    //методы Linq для первой части работы (словарь очередей)
     public static class ExtensionsAndRequests
     {
         #region Requests
@@ -18,13 +17,13 @@ namespace Functionality
              select animal).Count();
         }
 
-        //запрос на пересечение множеств (животные одного вида в двух секциях)
-        public static IEnumerable<Animal> QueueIntersection(Dictionary<string, Queue<Animal>> animalSections)
+        //запрос на животных, которые меньше определённого возраста
+        public static IEnumerable<Animal> AnimalsYoungerThan(Dictionary<string, Queue<Animal>> animalSections,
+            int ageCompare)
         {
-            return animalSections.First().Value
-                .IntersectBy(animalSections.Last().Value
-                .Select(x => x.Name), y => y.Name);
+            return animalSections.SelectMany(section => section.Value).Where(animal => animal.Age < ageCompare);
         }
+
 
         //запрос на средний возраст животных одного типа
         public static int AverageAgeOfType(Dictionary<string, Queue<Animal>> animalSections,
@@ -45,13 +44,6 @@ namespace Functionality
                     select animal).GroupBy(x => x.Habitat);
         }
 
-        //запрос на пересечение двух коллекций типа MyColleciton
-        public static IEnumerable<Animal> MyCollectionIntersection(MyCollection<Animal> myCollection,
-            MyCollection<Animal> myCollectionAddition)
-        {
-            return myCollection.IntersectBy(myCollectionAddition.Select(x => x.Name), x => x.Name);
-        }
-
         //запрос на количество животных определённого вида
         public static int NameCount(MyCollection<Animal> animals,
             string animalType)
@@ -68,7 +60,38 @@ namespace Functionality
                     select animal).GroupBy(x => x.GetType().Name);
         }
         #endregion
+
         #region Extensions
+
+        //запрос на количество животных из определённого ареала обитания
+        public static int HabitatCountExtension(Dictionary<string, Queue<Animal>> animalSections,
+            string animalHabitat)
+        {
+            return animalSections.SelectMany(section => section.Value).Count(animal => animal.Habitat == animalHabitat);
+        }
+
+        //запрос на пересечение множеств (животные одного вида в двух секциях)
+        public static IEnumerable<Animal> QueueIntersection(Dictionary<string, Queue<Animal>> animalSections)
+        {
+            return animalSections.First().Value
+                .IntersectBy(animalSections.Last().Value
+                .Select(x => x.Name), y => y.Name);
+        }
+
+        //запрос на пересечение двух коллекций типа MyColleciton
+        public static IEnumerable<Animal> MyCollectionIntersection(MyCollection<Animal> myCollection,
+            MyCollection<Animal> myCollectionAddition)
+        {
+            return myCollection.IntersectBy(myCollectionAddition.Select(x => x.Name), x => x.Name);
+        }
+
+        //запрос выбор объектов которые старше заданного значения
+        public static IEnumerable<Animal> OlderThan(MyCollection<Animal> myCollection,
+            int ageToCompare)
+        {
+            return myCollection.Where(animal => animal.Age > ageToCompare);
+        }
+
         //отбор животных по условию для словаря (через расширение)
         public static IEnumerable<Animal> WhereCustomDictionary<Animal>(this Dictionary<string, Queue<Animal>> dict, Func<Animal, bool> predicate)
         {
