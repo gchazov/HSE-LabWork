@@ -66,7 +66,7 @@ namespace LabWork14
             {
                 
             }
-            List<Animal> result = animalSections.Where(x => x.Age < animalAge).ToList();
+            List<Animal> result = animalSections.WhereCustomDictionary(x => x.Age < animalAge).ToList();
             Dialog.ColorText($"\nЖивотные, возраст которых меньше {animalAge}:\n", "green");
             CheckEmpty(result);
             Dialog.ForwardMessage();
@@ -76,17 +76,13 @@ namespace LabWork14
                 "Возможные континенты: Евразия, Антарктида, Южная Америка, Северная Америка," +
                 "Африка, Австралия", "yellow");
             var animalHabitat = Dialog.EnterString("Введите ареал обитания:", true);
-            int resultCount = (from section in animalSections
-                     from animal in section.Value
-                     where animal.Habitat == animalHabitat
-                     select animal).Count();
+            int resultCount = ExtensionsAndRequests.HabitatCount(animalSections, animalHabitat);
             Dialog.ColorText($"\nВ зоопарке есть {resultCount} животных, родина которых - это {animalHabitat}\n", "green");
-            CheckEmpty(result);
             Dialog.ForwardMessage();
 
             //пересечение множеств по названиям животных
             Dialog.ColorText("Особи животных в обеих секциях", "yellow");
-            result = animalSections["Секция A"].IntersectBy(animalSections["Секция B"].Select(x => x.Name), y => y.Name).ToList();
+            result = ExtensionsAndRequests.QueueIntersection(animalSections).ToList();
             Dialog.ColorText($"\nЖивотные Секции А, особи которых есть в Секции B:\n", "green");
             CheckEmpty(result);
             Dialog.ForwardMessage();
@@ -94,15 +90,7 @@ namespace LabWork14
             //агрегирование
             Dialog.ColorText("Средний возраст животных заданного вида", "yellow");
             var animalType = Dialog.EnterString("Введите наименование вида животного:", true);
-            var averageAgeSequence = from queue in animalSections
-                              from animal in queue.Value
-                              where animal.Name == animalType
-                              select animal;
-            int averageAge = 0;
-            if (averageAgeSequence.Count() != 0)
-            {
-                averageAge = (int)averageAgeSequence.Average(x => x.Age);
-            }
+            int averageAge = ExtensionsAndRequests.AverageAgeOfType(animalSections, animalType);
             if (averageAge > 0)
                 Dialog.ColorText($"\nСредний возраст всех животных вида {animalType} - {averageAge}:\n", "green");
             else
@@ -111,9 +99,7 @@ namespace LabWork14
 
             //группировка
             Dialog.ColorText("Группировка животных по ареалам обитания\n", "yellow");
-            var habitatGroups = (from queue in animalSections
-                          from animal in queue.Value
-                          select animal).GroupBy(x => x.Habitat);
+            var habitatGroups = ExtensionsAndRequests.GroupByHabitat(animalSections);
             foreach(var group in habitatGroups)
             {
                 Console.WriteLine($"{group.Key}:");
@@ -142,7 +128,7 @@ namespace LabWork14
 
             MyCollection<Animal> animals = new(10);
             MyCollection<Animal> animalsAddition = new(10); //понадобится позже
-            for (int i = 0; i < animals.Length; i++)
+            for (int i = 0; i < animals.Length + 5; i++)
             {
                 animals.Add(CollectionMethods.GetRandomAnimal());
                 animalsAddition.Add(CollectionMethods.GetRandomAnimal());
@@ -156,7 +142,7 @@ namespace LabWork14
             //запрос на выборку по условию
             Dialog.ColorText("Выборка животных, СТАРШЕ определённого возраста", "yellow");
             animalAge = Dialog.EnterNumber("Введите целочисленный возраст:", 1, 20);
-            result = animals.Where(x => x.Age > animalAge).ToList();
+            result = animals.WhereCustom(x => x.Age > animalAge).ToList();
             Dialog.ColorText($"\nЖивотные, возраст которых превышает {animalAge}:\n", "green");
             CheckEmpty(result);
             Dialog.ForwardMessage();
@@ -164,11 +150,8 @@ namespace LabWork14
             //получение счётчика
             Dialog.ColorText("Отбор животных одного вида\n", "yellow");
             animalType = Dialog.EnterString("Введите вид животного:", true);
-            result = (from animal in animals
-                      where animal.Name == animalType
-                      select animal).ToList();
-            Dialog.ColorText($"\nВ зоопарке есть {result.Count} животных, вид которых - это {animalType}:\n", "green");
-            CheckEmpty(result);
+            resultCount = ExtensionsAndRequests.NameCount(animals, animalType);
+            Dialog.ColorText($"\nВ зоопарке есть {resultCount} животных, вид которых - это {animalType}:\n", "green");
             Dialog.ForwardMessage();
 
             //пересечение множеств по названиям животных
@@ -176,19 +159,25 @@ namespace LabWork14
             Console.WriteLine("Используем вспомогательную вторую коллекцию для демонстрации этой задачи.\n" +
                 "Коллекция имеет вид:\n");
             Console.WriteLine(animalsAddition);
-            result = animals.IntersectBy(animalsAddition.Select(x => x.Name), x => x.Name).ToList();
+            result = ExtensionsAndRequests.MyCollectionIntersection(animals, animalsAddition).ToList();
             Dialog.ColorText($"\nЖивотные первой коллекции, особи которых есть во второй:\n", "green");
             CheckEmpty(result);
             Dialog.ForwardMessage();
 
-            //сортировка
-            Dialog.ColorText("Сортировка по указанному полю (можно менять в коде)", "yellow");
+            //сортировка по возрастанию
+            Dialog.ColorText("Сортировка по ВОЗРАСТНАИЮ по указанному полю (можно менять в коде)", "yellow");
             result = animals.OrderCustom(x => x.Age, Comparer<int>.Default).ToList();
             CheckEmpty(result);
             Dialog.ForwardMessage();
 
+            //сортировка по возрастанию
+            Dialog.ColorText("Сортировка по УБЫВАНИЮ по указанному полю (можно менять в коде)", "yellow");
+            result = animals.OrderByDescendingCustom(x => x.id.number, Comparer<int>.Default).ToList();
+            CheckEmpty(result);
+            Dialog.ForwardMessage();
+
             //агрегирование
-            Dialog.ColorText("Сортировка по указанному полю (можно менять в коде)", "yellow");
+            Dialog.ColorText("Агрегирование коллекции указанному полю (можно менять в коде)", "yellow");
             var minimal = animals.MinByCustom(x => x.Age, Comparer<int>.Default);
             var maximal = animals.MaxByCustom(x => x.Age, Comparer<int>.Default);
             var average = animals.AverageAge();
@@ -201,12 +190,10 @@ namespace LabWork14
 
             //группировка по виду животных
             Dialog.ColorText("Группировка по виду:\n", "yellow");
-            var typeGroups = (from animal in animals
-                              select animal)
-                .GroupBy(x => x.GetType());
+            var typeGroups = ExtensionsAndRequests.GroupByType(animals);
             foreach (var group in typeGroups)
             {
-                Console.WriteLine($"{group.Key.Name}:");
+                Console.WriteLine($"{group.Key}:");
                 foreach (Animal animal in group)
                 {
                     Console.WriteLine(animal);
@@ -227,7 +214,7 @@ namespace LabWork14
 
         }
 
-        static void CheckEmpty(List<Animal> list)
+        static void CheckEmpty(List<Animal> list)   //для проверки на пустоту листа
         {
             if (list.Count == 0)
                 Dialog.ColorText("Искомых объектов в коллекции нет");
